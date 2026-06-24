@@ -80,6 +80,10 @@
 (map! "S-C-c" #'clipboard-kill-ring-save)
 (map! "S-C-v" #'clipboard-yank)
 
+;; code commenting
+(map! :n "gc" #'comment-line)
+(map! :v "gc" #'comment-dwim)
+
 ;; remove LSP delays
 (after! flycheck (setq flycheck-idle-change-delay 0.1))
 (after! lsp-mode
