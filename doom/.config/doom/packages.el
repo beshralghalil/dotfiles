@@ -54,4 +54,3 @@
 ;; (unpin! t)
 
 (package! tldr)
-(package! dape)
