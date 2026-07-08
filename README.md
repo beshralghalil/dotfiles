@@ -2,7 +2,7 @@
 My config/dotfiles
 
 ### Usage
-requirements: `stow, kitty, zsh, fzf`
+requirements: `stow, kitty, zsh, fzf, zoxide`
 
 1. clone this repo to your home folder:
 ```sh
