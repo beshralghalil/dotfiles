@@ -1,0 +1,22 @@
+[opener]
+zathura = [
+    { run = 'zathura "$@"', desc = "Open in Zathura", orphan = true, for = "unix" },
+]
+play = [
+  { run = 'mpv "$@"', orphan = true, for = "unix" },
+]
+
+[open]
+rules = [
+    { mime = "application/pdf", use = "zathura" },
+    { mime = "application/pdf", use = "zathura" },
+]
+
+[[open.prepend_rules]]
+mime = "video/*"
+use = "play"
+
+[[open.prepend_rules]]
+mime = "audio/*"
+use = "play"
+
