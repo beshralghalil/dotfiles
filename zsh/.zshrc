@@ -25,6 +25,7 @@ alias l='ls -l'
 alias la='ls -a'
 alias lla='ls -la'
 alias lt='ls --tree'
+alias so="source $HOME/.zshrc"
 
 # Set-up FZF key bindings (CTRL R for fuzzy history finder)
 source <(fzf --zsh)
@@ -42,4 +43,4 @@ export PATH=$HOME/.config/emacs/bin:$PATH
 
 # minicom serial UART
 alias minicom='minicom -w -t kitty -l -R UTF-8'
-
+eval "$(zoxide init zsh)"
