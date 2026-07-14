@@ -1,0 +1,7 @@
+[Unit]
+Description=Dev tool cache cleanup (pip, cargo, npm)
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/dev-cache-cleanup.sh
+Nice=19

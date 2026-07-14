@@ -6,6 +6,7 @@ My personal dotfiles managed with GNU Stow.
 
 | Category     | Application | Notes                 | Dependencies                                                                        |
 | ------------ | ----------- | --------------------- | ----------------------------------------------------------------------------------- |
+| Cleanup      | sh,systemd  | dev-cache-cleanup script    |                                                                               |
 | Terminal     | Kitty       | Terminal emulator     | Nerd Font                                                                           |
 | Shell        | Zsh         | Interactive shell     | `zsh`, `oh-my-zsh` submodule                                                        |
 | Editor       | Doom Emacs  | Emacs configuration   | Emacs, Git, Ripgrep, fd, Nerd Font                                                  |
@@ -16,6 +17,7 @@ My personal dotfiles managed with GNU Stow.
 
 ```text
 .
+├── dev-cleanup/
 ├── doom/
 ├── kitty/
 ├── yazi/
@@ -65,6 +67,15 @@ Or install everything:
 
 ```sh
 stow */
+```
+
+For dev-cleanup
+```sh
+stow dev-cleanup
+systemctl --user daemon-reload
+systemctl --user enable --now dev-cache-cleanup.timer
+```
+```
 ```
 
 ## Notes
