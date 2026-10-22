@@ -12,6 +12,13 @@ My personal dotfiles managed with GNU Stow.
 | Editor       | Doom Emacs  | Emacs configuration   | Emacs, Git, Ripgrep, fd, Nerd Font                                                  |
 | PDF Viewer   | Zathura     | Minimal PDF viewer    | `zathura`, PDF backend (`zathura-pdf-poppler` or equivalent)                        |
 | File Manager | Yazi        | Terminal file manager, configured for openners: mpv (audio, video), zathura (pdf) | `ffmpegthumbnailer`, `p7zip`, `jq`, `poppler`, `fd`, `ripgrep`, `fzf` (recommended) |
+| Desktop      | Hyprland    | Lua config (Hyprland ≥ 0.55), based on JaKooLit's Hyprland-Dots; scripts, hypridle | `hyprland`, `hypridle`, `hyprlock` (lock fallback), `awww`, `wallust`, `grim`, `slurp`, `swappy`, `cliphist`, `brightnessctl`, `jq`, `curl` |
+| Shell UI     | Quickshell (`sumi`) | 墨 black-and-white bar, launcher, menus, session menu, desktop widgets (clock, calendar, music visualizer, weather, stats); inspired by Ryoku | `quickshell` ≥ 0.3, `cava`, JetBrains Mono + Nerd Font, Noto Sans/Serif CJK JP |
+| Lock / Login | Quickshell (`sumi-lock`) | qylock "clockwork/orbital" theme (as used by Ryoku) for the lock screen and the SDDM login screen | `quickshell`, `qt6-5compat`, `sddm` (optional) |
+| Menus        | `sumi-menu` | dmenu-style picker used by all scripts (replaces rofi) | the `sumi` shell running |
+| Theme        | GTK / Qt    | Graphite-Dark (GTK 3/4, libadwaita), Kvantum GraphiteDark, qt5ct/qt6ct, KDE colour scheme | `kvantum`, `qt5ct`, `qt6ct` |
+| Notifications| SwayNC      | Notification centre   | `swaync`                                                                            |
+| Colours      | Wallust     | Wallpaper-derived colours (templates incl. Hyprland Lua) | `wallust`                                                         |
 
 ## Directory Layout
 
@@ -19,7 +26,13 @@ My personal dotfiles managed with GNU Stow.
 .
 ├── dev-cleanup/
 ├── doom/
+├── hypr/
 ├── kitty/
+├── quickshell/      # sumi shell, sumi-lock, overview
+├── sumi-menu/
+├── swaync/
+├── theme/           # GTK/Qt/Kvantum/KDE colours + Graphite-Dark
+├── wallust/
 ├── yazi/
 ├── zathura/
 └── zsh/
@@ -75,8 +88,26 @@ stow dev-cleanup
 systemctl --user daemon-reload
 systemctl --user enable --now dev-cache-cleanup.timer
 ```
+
+For the Hyprland desktop (sumi):
+```sh
+stow hypr quickshell sumi-menu swaync wallust theme
+
+# GTK theme (Graphite-Dark is shipped in theme/.themes)
+gsettings set org.gnome.desktop.interface gtk-theme 'Graphite-Dark'
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+# libadwaita / GTK4 apps read ~/.config/gtk-4.0: link the theme files
+for f in assets gtk.css gtk-dark.css; do ln -sf ~/.themes/Graphite-Dark/gtk-4.0/$f ~/.config/gtk-4.0/$f; done
+
+# Dolphin and other KDE apps: pick the colour scheme in their own config
+kwriteconfig6 --file dolphinrc --group UiSettings --key ColorScheme GraphiteDark
+
+# Login screen (needs sudo): same theme as the lock screen
+~/.config/quickshell/sumi-lock/install-sddm-theme.sh
 ```
-```
+
+Desktop widgets are configured in `~/.config/sumi/widgets.json` (created on first run, not tracked):
+right-click a widget, press `SUPER+ALT+W`, or e.g. set `"weatherCity": "Your City"` for the weather widget.
 
 ## Notes
 
