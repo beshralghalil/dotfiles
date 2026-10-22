@@ -1,0 +1,271 @@
+#!/bin/bash
+# 墨 sumi-menu: dmenu-style menus in the sumi picker (quickshell).
+#
+# Scripts pipe rows in and read the choice back, using the familiar dmenu
+# flag vocabulary (the rofi -dmenu flags): rows on stdin ("text\0icon\x1f/path"
+# row options included), the choice on stdout, exit 0 accept / 1 cancel /
+# 10+N for -kb-custom-N.
+#
+#   sumi-menu -dmenu [-i] [-p PROMPT] [-mesg MSG] [-placeholder TEXT]
+#             [-format s|i|d|q|p|f|F] [-selected-row N] [-select STR]
+#             [-filter STR] [-lines N] [-no-custom] [-password]
+#             [-multi-select] [-markup-rows] [-sep C] [-input FILE]
+#             [-a ROWS] [-u ROWS] [-kb-custom-N KEYS] ...
+#   sumi-menu -show drun|run   -> the sumi launcher
+#   sumi-menu -show window     -> the picker's window switcher (Hyprland clients)
+#
+# Other rofi options are accepted and ignored (styling such as -config, -theme,
+# -theme-str, -show-icons). There is no fallback: if the sumi shell is not
+# running, the IPC fails or a mode is not supported, sumi-menu says so
+# (notification + stderr) and exits 1; usage errors exit 2.
+#
+# `pkill -x sumi-menu` (or ^C) closes the menu it has open and exits 1.
+#
+# Protocol: the request is a JSON file in $XDG_RUNTIME_DIR/sumi-picker/ (rows
+# in <request>.items, raw); `qs ipc call picker open <request>` shows it; the
+# shell writes <request>.result: code / kind (items|custom|none) / filter /
+# payload (row indices, or the typed text).
+
+SUMI_SHELL=${SUMI_SHELL_PATH:-$HOME/.config/quickshell/sumi}
+args=("$@")
+
+fail() {   # $1 reason  [$2 exit code, default 1]
+    printf 'sumi-menu: %s\n' "$1" >&2
+    notify-send -u low "sumi-menu" "$1" >/dev/null 2>&1
+    exit "${2:-1}"
+}
+usage_error() { fail "$1 (see: sumi-menu -help)" 2; }
+
+command -v qs >/dev/null 2>&1 || fail "qs (quickshell) not found in PATH"
+command -v jq >/dev/null 2>&1 || fail "jq not found in PATH"
+
+ipc() { qs -p "$SUMI_SHELL" ipc call "$@" 2>/dev/null; }
+NOT_RUNNING="the sumi shell is not running (start it with: qs -n -p $SUMI_SHELL)"
+
+# ── argument parsing ────────────────────────────────────────────────────────
+# rofi options that take a value (from `rofi -help`, 2.0) plus theme-era ones;
+# accepted for compatibility and ignored unless handled below
+ARG_OPTS=" -config -display -show -modi -modes -mesg -p -selected-row -format -u -a -l -lines
+ -window-title -select -sep -input -w -font -location -yoffset -xoffset -preview-cmd -terminal
+ -ssh-client -ssh-command -run-command -run-list-command -run-shell-command -window-command
+ -window-match-fields -icon-theme -drun-match-fields -drun-categories -drun-exclude-categories
+ -drun-display-format -drun-url-launcher -ignored-prefixes -sorting-method -eh -combi-modes
+ -matching -m -filter -dpi -threads -scroll-method -window-format -max-history-size
+ -combi-display-format -matching-negate-char -cache-dir -application-fallback-icon
+ -refilter-timeout-limit -completer-mode -pid -theme -theme-str -width -columns -bw -padding
+ -plugin-path -display-columns -display-column-separator -ballot-selected-str
+ -ballot-unselected-str -ellipsize-mode -fullscreen-width -kb-custom -window-thumbnail-size
+ -placeholder "
+BOOL_OPTS=" -no-config -dmenu -markup -normal-window -transient-window -no-lazy-grab -no-plugins
+ -i -only-match -no-custom -password -markup-rows -multi-select -sync -keep-right
+ -fixed-num-lines -show-icons -drun-show-actions -disable-history -sort -case-sensitive
+ -case-smart -cycle -sidebar-mode -hover-select -auto-select -parse-hosts -parse-known-hosts
+ -tokenize -click-to-exit -global-kb -combi-hide-mode-prefix -window-thumbnail
+ -drun-use-desktop-cache -drun-reload-desktop-cache -normalize-match -steal-focus
+ -xserver-i300-workaround -imdkit -no-fixed-num-lines -fullscreen -no-click-to-exit "
+# rofi features the picker does not have
+UNSUPPORTED_OPTS=" -e -v -version -dump-config -dump-theme -dump-xresources
+ -list-keybindings -rasi-validate -show-keybindings "
+
+dmenu=0 show="" prompt="" mesg="" lines="" sel="" fmt="s" nocustom=0 password=0
+markup=0 multi=0 sep=$'\n' filter="" select="" active="" urgent="" input=""
+casesens=0 placeholder=""
+declare -A kb=()
+
+n=${#args[@]}
+for ((i = 0; i < n; i++)); do
+    a=${args[i]}
+    next=${args[i+1]-}
+    has_next=$(( i + 1 < n ))
+    case $a in
+        -h|-help|--help)
+            sed -n '2,/^$/{s/^# \{0,1\}//;p}' "$0"
+            exit 0 ;;
+        -dmenu) dmenu=1 ;;
+        -show)
+            # tolerate `-show -dmenu`: -show without a mode
+            if (( has_next )) && [[ $next != -* ]]; then show=$next; ((i++)); fi ;;
+        -i|-no-case-sensitive) casesens=0 ;;
+        -case-sensitive) casesens=1 ;;
+        -p) prompt=$next; ((i++)) ;;
+        -mesg) mesg=$next; ((i++)) ;;
+        -placeholder) placeholder=$next; ((i++)) ;;
+        -l|-lines) lines=$next; ((i++)) ;;
+        -selected-row) sel=$next; ((i++)) ;;
+        -format) fmt=$next; ((i++)) ;;
+        -no-custom|-only-match) nocustom=1 ;;
+        -password) password=1 ;;
+        -markup-rows) markup=1 ;;
+        -multi-select) multi=1 ;;
+        -sep) sep=$next; ((i++)) ;;
+        -filter) filter=$next; ((i++)) ;;
+        -select) select=$next; ((i++)) ;;
+        -a) active=$next; ((i++)) ;;
+        -u) urgent=$next; ((i++)) ;;
+        -input) input=$next; ((i++)) ;;
+        -kb-custom-[0-9]|-kb-custom-1[0-9]) kb[${a#-kb-custom-}]=$next; ((i++)) ;;
+        -*)
+            if [[ $UNSUPPORTED_OPTS == *" $a "* || $a == -dump-* ]]; then
+                fail "option $a is not supported"
+            elif [[ $ARG_OPTS == *" $a "* || $a == -kb-* || $a == -ml-* || $a == -me-* \
+                    || $a == -display-* || $a == -on-* ]]; then
+                ((i++))
+            elif [[ $BOOL_OPTS == *" $a "* || $a == -no-* ]]; then
+                :
+            elif (( ! has_next )) || [[ $next == -* ]]; then
+                :   # unknown, but nothing to swallow: treat as a switch
+            else
+                usage_error "unknown option $a"
+            fi ;;
+        *) usage_error "unexpected argument '$a'" ;;
+    esac
+done
+
+# ── non-dmenu modes ─────────────────────────────────────────────────────────
+if (( ! dmenu )); then
+    case $show in
+        drun|run)
+            r=$(ipc launcher open)
+            [[ $r == open ]] && exit 0
+            [[ -n $r ]] && fail "launcher: $r"
+            fail "$NOT_RUNNING" ;;
+        window)
+            [[ $(ipc picker windows) == open ]] && exit 0
+            fail "$NOT_RUNNING" ;;
+        "")
+            usage_error "nothing to do: use -dmenu or -show drun|run|window" ;;
+        *)
+            fail "mode '$show' is not supported (only -dmenu, -show drun|run|window)" ;;
+    esac
+fi
+
+# ── dmenu ───────────────────────────────────────────────────────────────────
+case $sep in
+    '\n'|'') sep=$'\n' ;;
+    '\t') sep=$'\t' ;;
+    '\0'|'\x00') fail "-sep '\\0' is not supported" ;;
+esac
+[[ ${#sep} -eq 1 ]] || usage_error "-sep must be a single character"
+[[ -z $lines || $lines =~ ^-?[0-9]+$ ]] || lines=""
+[[ -z $sel || $sel =~ ^[0-9]+$ ]] || sel=""
+
+rt=${XDG_RUNTIME_DIR:-/tmp/sumi-$UID}/sumi-picker
+mkdir -p -m 700 "$rt" 2>/dev/null || fail "cannot create $rt"
+req=$(mktemp "$rt/req.XXXXXXXX") || fail "cannot create a request file in $rt"
+items=$req.items
+result=$req.result
+
+cleanup() { rm -f -- "$req" "$items" "$result" "$req.tmp"; }
+trap cleanup EXIT
+
+# rows: -input FILE, else stdin (never block on a terminal)
+if [[ -n $input ]]; then
+    cat -- "$input" >"$items" 2>/dev/null || : >"$items"
+elif [[ -t 0 ]]; then
+    : >"$items"
+else
+    cat >"$items"
+fi
+
+kbjson='{}'
+for k in "${!kb[@]}"; do
+    kbjson=$(jq -cn --argjson o "$kbjson" --arg k "$k" --arg v "${kb[$k]}" '$o + {($k): $v}') \
+        || fail "cannot encode -kb-custom-$k"
+done
+
+jq -n \
+    --arg items "$items" --arg result "$result" \
+    --arg prompt "$prompt" --arg mesg "$mesg" --arg placeholder "$placeholder" \
+    --arg lines "$lines" --arg sel "$sel" --arg format "$fmt" \
+    --arg filter "$filter" --arg select "$select" --arg sep "$sep" \
+    --arg active "$active" --arg urgent "$urgent" \
+    --argjson noCustom "$nocustom" --argjson password "$password" \
+    --argjson markupRows "$markup" --argjson multiSelect "$multi" \
+    --argjson caseSensitive "$casesens" --argjson kb "$kbjson" \
+    '{ version: 1, mode: "dmenu", items: $items, result: $result,
+       prompt: $prompt, mesg: $mesg, placeholder: $placeholder,
+       lines: (if $lines == "" then null else ($lines | tonumber) end),
+       selectedRow: (if $sel == "" then null else ($sel | tonumber) end),
+       format: $format, filter: $filter, select: $select, sep: $sep,
+       active: $active, urgent: $urgent,
+       noCustom: ($noCustom == 1), password: ($password == 1),
+       markupRows: ($markupRows == 1), multiSelect: ($multiSelect == 1),
+       caseSensitive: ($caseSensitive == 1), kb: $kb }' >"$req.tmp" \
+    && mv -f -- "$req.tmp" "$req" || fail "cannot write the picker request"
+
+# killed (`pkill -x sumi-menu` from the next menu, ^C): close our menu, exit 1
+on_signal() {
+    ipc picker dismiss "$req" >/dev/null
+    cleanup
+    exit 1
+}
+trap on_signal INT TERM HUP
+
+r=$(ipc picker open "$req")
+if [[ $r != open ]]; then
+    [[ -n $r ]] && fail "picker: $r"
+    fail "$NOT_RUNNING"
+fi
+
+# wait for the answer without forking a sleep every tick; every ~second make
+# sure the shell still has our request open (it may have died or reloaded)
+exec {tick}<> <(:)
+t=0
+while [[ ! -e $result ]]; do
+    read -r -t 0.05 -u "$tick" _
+    if (( ++t % 20 == 0 )) && [[ ! -e $result ]]; then
+        st=$(ipc picker status "$req")
+        [[ -e $result ]] && break
+        [[ $st == active ]] || exit 1
+    fi
+done
+
+mapfile -t res <"$result"
+code=${res[0]:-1}
+kind=${res[1]:-none}
+filt=${res[2]-}
+payload=("${res[@]:3}")
+[[ $code =~ ^[0-9]+$ ]] || code=1
+
+# raw text of row $1 (0-based) without its \0 row options
+row_text() {
+    local t=""
+    if [[ $sep == $'\n' ]]; then
+        IFS= read -r -d '' t < <(sed -n "$(( $1 + 1 )){p;q}" -- "$items")
+        t=${t%$'\n'}
+    else
+        IFS= read -r -d '' t < <(gawk -v RS="$sep" -v n="$(( $1 + 1 ))" 'NR == n { printf "%s", $0; exit }' "$items")
+    fi
+    printf '%s' "$t"
+}
+quote() { local s=${1//\'/\'\\\'\'}; printf "'%s'" "$s"; }
+strip_markup() { sed -e 's/<[^>]*>//g' -e 's/&lt;/</g; s/&gt;/>/g; s/&quot;/"/g; s/&apos;/'"'"'/g; s/&amp;/\&/g' <<<"$1"; }
+
+emit() {   # $1 index (-1 custom)  $2 text
+    local out="" c j
+    for ((j = 0; j < ${#fmt}; j++)); do
+        c=${fmt:j:1}
+        case $c in
+            s) out+=$2 ;;
+            i) out+=$1 ;;
+            d) out+=$(( $1 + 1 )) ;;
+            q) out+=$(quote "$2") ;;
+            p) out+=$(strip_markup "$2") ;;
+            f) out+=$filt ;;
+            F) out+=$(quote "$filt") ;;
+            *) out+=$c ;;
+        esac
+    done
+    printf '%s\n' "$out"
+}
+
+case $kind in
+    items)
+        for idx in "${payload[@]}"; do
+            [[ $idx =~ ^[0-9]+$ ]] || continue
+            emit "$idx" "$(row_text "$idx")"
+        done ;;
+    custom)
+        emit -1 "${payload[0]-}" ;;
+esac
+exit "$code"
