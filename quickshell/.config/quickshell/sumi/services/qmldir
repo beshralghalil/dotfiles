@@ -1,0 +1,4 @@
+singleton Config Config.qml
+singleton Stats Stats.qml
+singleton Weather Weather.qml
+singleton AudioBars AudioBars.qml
