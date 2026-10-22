@@ -1,0 +1,126 @@
+-- /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  --
+-- User Settings (converted from UserSettings.conf)
+-- refer to Hyprland wiki for more info https://wiki.hypr.land/0.56.0/Configuring/Basics/Variables/
+-- NOTE: some settings are in UserDecorations.lua / UserAnimations.lua
+
+local zoomCmd = require("vars").zoomCmd
+
+hl.config({
+    dwindle = {
+        -- pseudotile was removed in Hyprland 0.55
+        preserve_split = true,
+        -- smart_split = true,
+        special_scale_factor = 0.8,
+    },
+
+    master = {
+        new_status = "master",
+        new_on_top = true,
+        mfact = 0.5,
+    },
+
+    general = {
+        resize_on_border = true,
+
+        layout = "dwindle",
+    },
+
+    input = {
+        -- kb_layout = "us",
+        kb_layout = "us,ara",
+        kb_variant = ",qwerty",
+        kb_model = "",
+        kb_options = "grp:win_space_toggle,caps:escape",
+        kb_rules = "",
+        repeat_rate = 50,
+        repeat_delay = 300,
+
+        sensitivity = 0, -- mouse sensitivity
+        -- accel_profile = "", -- flat or adaptive or blank or EMPTY means libinput's default mode
+        numlock_by_default = true,
+        left_handed = false,
+        follow_mouse = 1,
+        float_switch_override_focus = false,
+
+        touchpad = {
+            disable_while_typing = true,
+            natural_scroll = true,
+            clickfinger_behavior = false,
+            middle_button_emulation = false,
+            tap_to_click = true,
+            drag_lock = false,
+        },
+
+        -- below for devices with touchdevice ie. touchscreen
+        touchdevice = {
+            enabled = true,
+        },
+
+        -- below is for tablet see link above for proper variables
+        tablet = {
+            transform = 0,
+            left_handed = false,
+        },
+    },
+
+    gestures = {
+        workspace_swipe_distance = 500,
+        workspace_swipe_invert = true,
+        workspace_swipe_min_speed_to_force = 30,
+        workspace_swipe_cancel_ratio = 0.5,
+        workspace_swipe_create_new = true,
+        workspace_swipe_forever = true,
+        -- workspace_swipe_use_r = true, -- uncomment if wanted a forever create a new workspace with swipe right
+    },
+
+    misc = {
+        disable_hyprland_logo = true,
+        disable_splash_rendering = true,
+        -- vfr moved to debug.vfr in 0.55
+        vrr = 2,
+        mouse_move_enables_dpms = true,
+        enable_swallow = false,
+        swallow_regex = "^(kitty)$",
+        focus_on_activate = false,
+        initial_workspace_tracking = 0,
+        middle_click_paste = false,
+        enable_anr_dialog = true,         -- Application not Responding (ANR)
+        anr_missed_pings = 15,            -- ANR Threshold default 1 is too low
+        allow_session_lock_restore = true, -- Prevent lockscreen crash when resume from suspend
+    },
+
+    -- opengl = {
+    --     nvidia_anti_flicker = true,
+    -- },
+
+    binds = {
+        workspace_back_and_forth = true,
+        allow_workspace_cycles = true,
+        pass_mouse_when_bound = false,
+    },
+
+    -- Could help when scaling and not pixelating
+    xwayland = {
+        enabled = true,
+        force_zero_scaling = true,
+    },
+
+    render = {
+        direct_scanout = 0,
+    },
+
+    cursor = {
+        sync_gsettings_theme = true,
+        no_hardware_cursors = 1, -- change to 1 if want to disable
+        use_cpu_buffer = true,
+        enable_hyprcursor = true,
+        warp_on_change_workspace = 2,
+        no_warps = true,
+    },
+})
+
+-- Gestures
+hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
+hl.gesture({ fingers = 3, direction = "up", action = function() hl.exec_cmd(zoomCmd("* 1.5")) end })
+hl.gesture({ fingers = 3, direction = "down", action = function() hl.exec_cmd(zoomCmd("/ 1.5")) end })
+
