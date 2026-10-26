@@ -4,7 +4,7 @@ import Quickshell.Io
 
 // Small pollers the bar needs that Quickshell has no service for. Nothing runs
 // while `running` is false.
-//   cpu / mem / temp   /proc + hwmon, every `statsInterval` ms
+//   cpu / mem / temp   /proc + hwmon (cpu + dGPU temp), every `statsInterval` ms
 //   brightness         `brightnessctl -m`, every 5 s (and on refreshBrightness())
 //   nightlight         hyprsunset process / state file, every 3 s
 //   notifications      `swaync-client -swb` event stream (count + dnd)
@@ -18,6 +18,7 @@ Scope {
     property real cpu: -1
     property real mem: -1
     property real temp: -1
+    property real gpuTemp: -1          // discrete GPU, °C
     property real brightness: -1       // 0..1
     property bool nightlight: false
     property int notifCount: 0
@@ -32,7 +33,12 @@ Scope {
     readonly property string _statsScript: "read -r _ u n s i w x y z _ < /proc/stat; echo $((u+n+s+i+w+x+y+z)) $((i+w));"
         + "awk '/^MemTotal/{t=$2}/^MemAvailable/{a=$2}END{print t, a}' /proc/meminfo;"
         + "t=-1; for h in /sys/class/hwmon/hwmon*; do case $(cat $h/name 2>/dev/null) in coretemp|k10temp|zenpower) t=$(cat $h/temp1_input 2>/dev/null); break;; esac; done;"
-        + "if [ \"$t\" = -1 ]; then for z in /sys/class/thermal/thermal_zone*; do [ \"$(cat $z/type)\" = x86_pkg_temp ] && t=$(cat $z/temp); done; fi; echo $t"
+        + "if [ \"$t\" = -1 ]; then for z in /sys/class/thermal/thermal_zone*; do [ \"$(cat $z/type)\" = x86_pkg_temp ] && t=$(cat $z/temp); done; fi; echo $t;"
+        // line 4: discrete GPU temp in milli-°C. EC sensor first (legion_hwmon), which
+        // never wakes a runtime-suspended dGPU the way nvidia-smi would; else the hwmon
+        // of the non-boot card (amdgpu / nouveau).
+        + "g=-1; for l in /sys/class/hwmon/hwmon*/temp*_label; do [ \"$(cat $l 2>/dev/null)\" = 'GPU Temperature' ] && { g=$(cat ${l%_label}_input); break; }; done;"
+        + "if [ \"$g\" = -1 ]; then for c in /sys/class/drm/card*/device; do [ \"$(cat $c/boot_vga 2>/dev/null)\" = 0 ] && for h in $c/hwmon/hwmon*; do [ -r $h/temp1_input ] && g=$(cat $h/temp1_input); done; done; fi; echo $g"
 
     Process {
         id: statsProc
@@ -51,6 +57,8 @@ Scope {
                 if (m[0] > 0) root.mem = 100 * (m[0] - m[1]) / m[0];
                 const t = Number(l[2]);
                 root.temp = t >= 0 ? t / 1000 : -1;
+                const g = l.length > 3 ? Number(l[3]) : -1;
+                root.gpuTemp = g > 0 ? g / 1000 : -1;
             }
         }
     }

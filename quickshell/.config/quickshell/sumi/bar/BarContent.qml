@@ -30,6 +30,7 @@ Item {
     property real cpu: -1                // %
     property real mem: -1                // %
     property real temp: -1               // °C
+    property real gpuTemp: -1            // °C, discrete GPU
     property bool hasSink: false
     property real volume: 0              // 0..1(+)
     property bool muted: false
@@ -233,7 +234,7 @@ Item {
             }
         }
         Rule { visible: bar.showStats && bar.cpu >= 0 && (bar.battery >= 0 || (bar.showBrightness && bar.brightness >= 0)) }
-        Chip { // system: cpu, memory, temperature
+        Chip { // system: cpu, memory, cpu temperature, gpu temperature
             visible: bar.showStats && bar.cpu >= 0
             spacing: 9
             onClicked: b => bar.action("stats", b)
@@ -244,6 +245,12 @@ Item {
                 label: "\u{F050F}"; value: "" + Math.round(bar.temp); unit: "°"
                 frac: Math.min(1, bar.temp / 100)
                 sealed: bar.temp >= 85
+            }
+            Readout {
+                visible: bar.gpuTemp >= 0
+                label: "\u{F08AE}"; value: "" + Math.round(bar.gpuTemp); unit: "°"
+                frac: Math.min(1, bar.gpuTemp / 100)
+                sealed: bar.gpuTemp >= 85
             }
         }
         Rule { visible: bar.hasSink || (bar.showMic && bar.hasMic) }

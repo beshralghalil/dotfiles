@@ -265,6 +265,7 @@ Scope {
                 cpu: services.cpu
                 mem: services.mem
                 temp: services.temp
+                gpuTemp: services.gpuTemp
 
                 battery: root.batteryFrac
                 charging: root.battery !== null && (root.battery.state === UPowerDeviceState.Charging
