@@ -1,1 +1,13 @@
 set selection-clipboard clipboard
+
+set recolor-keephue true
+
+# Default recolor colors (sepia), used by Ctrl+R
+set recolor-lightcolor "rgb(244,236,216)"
+set recolor-darkcolor  "rgb(91,70,54)"
+
+# Alt+s → sepia
+map <A-s> feedkeys ":set recolor-lightcolor rgb(244,236,216)<Return>:set recolor-darkcolor rgb(91,70,54)<Return>:set recolor true<Return>"
+
+# Alt+d → dark mode
+map <A-d> feedkeys ":set recolor-lightcolor rgb(0,0,0)<Return>:set recolor-darkcolor rgb(255,255,255)<Return>:set recolor true<Return>"
