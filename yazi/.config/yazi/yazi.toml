@@ -1,15 +1,14 @@
 [opener]
 zathura = [
-    { run = 'zathura "$@"', desc = "Open in Zathura", orphan = true, for = "unix" },
+  { run = 'zathura "$@"', desc = "Open in Zathura", orphan = true, for = "unix" },
 ]
-play = [
-  { run = 'mpv "$@"', orphan = true, for = "unix" },
-]
+play = [{ run = 'mpv "$@"', orphan = true, for = "unix" }]
+text = [{ run = 'nvim "$@"', block = true }]
 
 [open]
 rules = [
-    { mime = "application/pdf", use = "zathura" },
-    { mime = "application/pdf", use = "zathura" },
+  { mime = "application/pdf", use = "zathura" },
+  { mime = "application/pdf", use = "zathura" },
 ]
 
 [[open.prepend_rules]]
@@ -20,3 +19,6 @@ use = "play"
 mime = "audio/*"
 use = "play"
 
+[[open.prepend_rules]]
+mime = "text/*"
+use = "text"
