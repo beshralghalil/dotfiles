@@ -10,3 +10,5 @@ theme/.config/gtk-3.0/bookmarks
 theme/.config/gtk-4.0/assets
 theme/.config/gtk-4.0/gtk.css
 theme/.config/gtk-4.0/gtk-dark.css
+# ── graft: session cache written by the graft MCP server ──
+/graft/
