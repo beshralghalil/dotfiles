@@ -11,6 +11,7 @@ My personal dotfiles managed with GNU Stow.
 | Shell        | Zsh         | Interactive shell     | `zsh`, `oh-my-zsh` submodule                                                        |
 | Editor       | Doom Emacs  | Emacs configuration   | Emacs, Git, Ripgrep, fd, Nerd Font                                                  |
 | PDF Viewer   | Zathura     | Minimal PDF viewer    | `zathura`, PDF backend (`zathura-pdf-poppler` or equivalent)                        |
+| PDF Viewer   | Sioyek      | Research-paper PDF viewer (sepia / dark mode toggles) | `sioyek`                                        |
 | File Manager | Yazi        | Terminal file manager, configured for openners: mpv (audio, video), zathura (pdf) | `ffmpegthumbnailer`, `p7zip`, `jq`, `poppler`, `fd`, `ripgrep`, `fzf` (recommended) |
 | Desktop      | Hyprland    | Lua config (Hyprland ≥ 0.55), based on JaKooLit's Hyprland-Dots; scripts, hypridle | `hyprland`, `hypridle`, `hyprlock` (lock fallback), `awww`, `wallust`, `grim`, `slurp`, `swappy`, `cliphist`, `brightnessctl`, `jq`, `curl` |
 | Shell UI     | Quickshell (`sumi`) | 墨 black-and-white bar, launcher, menus, session menu, desktop widgets (clock, calendar, music visualizer, weather, stats); inspired by Ryoku | `quickshell` ≥ 0.3, `cava`, JetBrains Mono + Nerd Font, Noto Sans/Serif CJK JP |
@@ -29,6 +30,7 @@ My personal dotfiles managed with GNU Stow.
 ├── hypr/
 ├── kitty/
 ├── quickshell/      # sumi shell, sumi-lock, overview
+├── sioyek/
 ├── sumi-menu/
 ├── swaync/
 ├── theme/           # GTK/Qt/Kvantum/KDE colours + Graphite-Dark
@@ -74,6 +76,7 @@ stow zsh
 stow doom
 stow yazi
 stow zathura
+stow sioyek
 ```
 
 Or install everything:
