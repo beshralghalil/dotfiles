@@ -205,6 +205,21 @@ Item {
     }
 
     // ── right ──────────────────────────────────────────────────────────────
+    // room the media title may take without pushing the right group into the
+    // centre: everything between the centre and the bar's edge, minus the other
+    // right-hand cells and the media chip's own seal and padding
+    readonly property real mediaRoom: {
+        let used = 0, n = 0;
+        for (const c of right.children) {
+            if (!c.visible) continue;
+            n++;
+            if (c !== mediaChip) used += c.width;
+        }
+        used += right.spacing * Math.max(0, n - 1)
+              + 2 * mediaChip.padding + mediaSeal.width + mediaChip.spacing;
+        return bar.width - right.anchors.rightMargin - (center.x + center.width) - 16 - used;
+    }
+
     Row {
         id: right
         anchors { right: parent.right; rightMargin: 8; verticalCenter: parent.verticalCenter }
@@ -283,10 +298,11 @@ Item {
             spacing: 6
             onClicked: b => bar.action(b === Qt.RightButton ? "mediaNext" : b === Qt.MiddleButton ? "mediaPrev" : "mediaToggle", null)
             onScrolled: s => bar.action("volumeStep", s)
-            Seal { text: bar.mediaPlaying ? "\u{F075A}" : "\u{F03E4}"; dim: !bar.mediaPlaying }
+            Seal { id: mediaSeal; text: bar.mediaPlaying ? "\u{F075A}" : "\u{F03E4}"; dim: !bar.mediaPlaying }
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                width: Math.min(implicitWidth, bar.mediaMaxWidth)
+                visible: width > 0
+                width: Math.max(0, Math.min(implicitWidth, bar.mediaMaxWidth, bar.mediaRoom))
                 elide: Text.ElideRight
                 text: bar.mediaTitle + (bar.mediaArtist ? "  —  " + bar.mediaArtist : "")
                 color: bar.mediaPlaying ? Theme.ink : Theme.inkDim
