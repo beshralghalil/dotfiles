@@ -43,7 +43,11 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/Documents/org/")
+(setq org-agenda-files
+      (list (concat org-directory "tasks.org")
+            (concat org-directory "notes.org")
+            (concat org-directory "journal.org")))
 
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
@@ -95,6 +99,13 @@
   (setq lsp-completion-enable-additional-text-edit t)
   (setq lsp-modeline-code-actions-enable t)
   )
+
+;; debugger
+(after! dap-mode
+  (dap-auto-configure-mode 1))
+(after! lsp-mode
+  (setq lsp-enable-dap-auto-configure t))
+
 ;; tramp
 (setq remote-file-name-inhibit-locks t
       tramp-use-scp-direct-remote-copying t

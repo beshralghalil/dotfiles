@@ -54,3 +54,6 @@
 ;; (unpin! t)
 
 (package! tldr)
+
+(package! devcontainer
+  :recipe (:host github :repo "johannes-mueller/devcontainer.el"))
