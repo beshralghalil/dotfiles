@@ -93,7 +93,7 @@ Item {
                     var f = lines[i].split(":");
                     var uid = parseInt(f[2]);
                     if (f.length < 7 || uid < 1000 || uid >= 60000 || /(nologin|false)$/.test(f[6])) continue;
-                    internalUserModel.append({ name: f[0], realName: f[4].split(",")[0] || f[0], icon: "", homeDir: f[5], shell: f[6] });
+                    internalUserModel.append({ name: f[0], realName: f[4].split(",")[0] || f[0], icon: "", homeDir: f[5] });
                 }
                 if (internalUserModel.count > 0) internalUserModel.lastUser = internalUserModel.get(0).name;
             }
@@ -198,7 +198,6 @@ Item {
             if (shim.greeter) {
                 shim.greetdPassword = password;
                 shim.greetdSession = sessionIndex;
-                shim.greetdUser = user;
                 Greetd.createSession(user);
                 return;
             }
@@ -236,13 +235,7 @@ Item {
     // Greeter login: createSession -> answer the password prompt -> launch the chosen session
     property string greetdPassword: ""
     property int greetdSession: 0
-    property string greetdUser: ""
 
-    function loginShell(user) {
-        for (let i = 0; i < internalUserModel.count; i++)
-            if (internalUserModel.get(i).name === user) return internalUserModel.get(i).shell || "/bin/sh";
-        return "/bin/sh";
-    }
 
     function greetdFailed() {
         greetdPassword = "";
@@ -268,12 +261,10 @@ Item {
             var s = internalSessionModel.get(shim.greetdSession) || internalSessionModel.get(0);
             var id = s.file.replace(/\.desktop$/, "");
             var exec = s.exec.split(/\s+/).filter(a => a !== "" && !a.startsWith("%"));
-            // run the session through the user's login shell, like SDDM: it reads the shell's
-            // profile (e.g. ~/.zshenv / ~/.zprofile: PATH with ~/.local/bin); output goes to the
-            // journal (journalctl -t <id>), not the console behind the greeter
-            var sh = shim.loginShell(shim.greetdUser);
-            var viaShell = sh.endsWith("/fish") ? [sh, "-l", "-c", "exec $argv"] : [sh, "-l", "-c", 'exec "$@"', "session"];
-            var cmd = ["systemd-cat", "-t", id].concat(viaShell, exec);
+            // session.sh runs it through the user's login shell, like SDDM (the shell's profile:
+            // PATH with ~/.local/bin); output goes to the journal (journalctl -t <id>), not the
+            // console. greetd joins cmd with spaces for `sh -c`: no element may need quoting.
+            var cmd = ["systemd-cat", "-t", id, Quickshell.shellDir + "/session.sh"].concat(exec);
             var env = [
                 "XDG_SESSION_TYPE=wayland",
                 "XDG_SESSION_DESKTOP=" + id,

@@ -40,7 +40,7 @@ fi
 sudo install -d -o greeter -g greeter -m 700 /var/cache/sumi-greeter
 sudo rm -rf "$DEST"
 sudo mkdir -p "$DEST"
-sudo cp -r "$DIR"/{greeter.qml,greeter.sh,shim,imports,themes,LICENSE} "$DEST"/
+sudo cp -r "$DIR"/{greeter.qml,greeter.sh,session.sh,shim,imports,themes,LICENSE} "$DEST"/
 sudo chmod -R a+rX "$DEST"
 
 # greetd: run the greeter in cage on VT1, its output to the journal (not the console)
