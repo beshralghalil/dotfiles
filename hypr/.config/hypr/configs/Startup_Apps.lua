@@ -25,8 +25,8 @@ hl.on("hyprland.start", function()
     -- Initialize Drop Down terminal - See Bug#810 https://github.com/JaKooLit/Hyprland-Dots/issues/810#issuecomment-3351947644
     hl.exec_cmd(scriptsDir .. "/Dropterminal.sh kitty &")
 
-    -- Polkit (Polkit Gnome / KDE)
-    hl.exec_cmd(scriptsDir .. "/Polkit.sh")
+    -- Polkit agent: started as the hyprpolkitagent user service in UserConfigs/Startup_Apps.lua
+    -- (a second copy via Polkit.sh crashed at every login)
 
     -- startup apps
     hl.exec_cmd("nm-applet --indicator")
