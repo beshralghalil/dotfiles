@@ -43,4 +43,5 @@ end
 
 -- nwg-displays (writes monitors.lua; workspaces.lua is optional)
 pcall(require, "monitors")
+hl.exec_cmd(v.hyprDir .. "/UserScripts/RefreshRate.sh auto") -- monitors.lua forces 144 Hz on every reload
 pcall(require, "workspaces")

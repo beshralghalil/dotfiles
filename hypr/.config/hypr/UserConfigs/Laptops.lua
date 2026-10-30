@@ -39,3 +39,8 @@ hl.device({
 
 -- NOTE: the old LaptopDisplay.conf / lid-switch-writes-a-file method is not carried over;
 -- use the two binds above instead if you need lid handling.
+
+-- Refresh rate: 60 Hz on battery / 144 Hz on AC (UserScripts/RefreshRate.sh), SUPER+SHIFT+R toggles
+local refreshRate = v.hyprDir .. "/UserScripts/RefreshRate.sh"
+hl.on("hyprland.start", function() hl.exec_cmd(refreshRate .. " watch") end)
+hl.bind(mainMod .. " + SHIFT + R", exec(refreshRate .. " toggle")) -- toggle 60/144 Hz (with notification)
