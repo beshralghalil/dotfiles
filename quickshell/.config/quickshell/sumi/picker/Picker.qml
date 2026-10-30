@@ -378,9 +378,14 @@ Scope {
         ackWriter.setText(r + "\n");
         ackWriter.path = "";
     }
-    Process { // make sure the trigger exists before watching it
+    // at (re)load: create the trigger, record this shell's pid (sumi-menu checks it is alive),
+    // and cancel requests that were open before the reload (their menus are gone)
+    Process {
         running: true
-        command: ["sh", "-c", "mkdir -p -m 700 \"$1\" && touch \"$1/open\"", "sh", root.spoolDir]
+        command: ["sh", "-c", "mkdir -p -m 700 \"$1\" && touch \"$1/open\" && echo $PPID > \"$1/shell.pid\"; "
+            + "for a in \"$1\"/*.ack; do [ -e \"$a\" ] || continue; r=\"${a%.ack}.result\"; "
+            + "[ -e \"$r\" ] || { printf '1\\nnone\\n\\n' > \"$r.tmp\" && mv -f \"$r.tmp\" \"$r\"; }; done",
+            "sh", root.spoolDir]
         onExited: trigger.path = root.spoolDir + "/open"
     }
     FileView {

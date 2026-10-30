@@ -48,6 +48,8 @@ rows() {
     done
 }
 
+command -v sumi-menu >/dev/null || { notify-send -u critical "Clipboard" "sumi-menu not found in PATH"; exit 1; }
+
 # Close an open sumi-menu first
 if pgrep -x sumi-menu >/dev/null; then
   pkill -x sumi-menu
@@ -82,6 +84,9 @@ while true; do
             ;;
         11)
             cliphist wipe
+            ;;
+        *)  # cancelled by another menu, sumi-menu missing or failing: never loop on errors
+            exit 1
             ;;
     esac
 done

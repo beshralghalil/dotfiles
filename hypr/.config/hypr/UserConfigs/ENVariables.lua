@@ -8,6 +8,15 @@
 -- Current Version of JakooLit Dotfiles:
 hl.env("DOTS_VERSION", "2.3.18")
 
+-- ~/.local/bin (sumi-menu and other user scripts) must be on PATH for keybinds and the bar,
+-- whatever started Hyprland (greetd runs the session via /bin/sh, which skips ~/.zshenv)
+do
+    local home, path = os.getenv("HOME") or "", os.getenv("PATH") or "/usr/local/bin:/usr/bin"
+    if home ~= "" and not (":" .. path .. ":"):find(":" .. home .. "/.local/bin:", 1, true) then
+        hl.env("PATH", home .. "/.local/bin:" .. path)
+    end
+end
+
 -- Toolkit Backend Variables
 hl.env("GDK_BACKEND", "wayland,x11,*")
 hl.env("QT_QPA_PLATFORM", "wayland;xcb")

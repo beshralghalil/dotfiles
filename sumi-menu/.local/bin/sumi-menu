@@ -214,16 +214,22 @@ if [[ $r != open ]]; then
     [[ -n $r ]] && fail "picker: $r"
     fail "$NOT_RUNNING"
 fi
+[[ -e $req.ack ]] || printf 'open\n' >"$req.ack"   # lets a reloading shell cancel it
+shell_pid=$(<"$rt/shell.pid") 2>/dev/null
 
 # wait for the answer without forking a sleep every tick; every ~second make
-# sure the shell still has our request open (it may have died or reloaded)
+# sure the shell is still alive (a reload answers open requests with "cancel")
 t=0
 while [[ ! -e $result ]]; do
     read -r -t 0.02 -u "$tick" _
     if (( ++t % 50 == 0 )) && [[ ! -e $result ]]; then
-        st=$(ipc picker status "$req")
-        [[ -e $result ]] && break
-        [[ $st == active ]] || exit 1
+        if [[ -n $shell_pid ]]; then
+            kill -0 "$shell_pid" 2>/dev/null || exit 1
+        else   # shell without shell.pid (older sumi): ask it
+            st=$(ipc picker status "$req")
+            [[ -e $result ]] && break
+            [[ $st == active ]] || exit 1
+        fi
     fi
 done
 
