@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
 
-# Modified version of Refresh.sh but waybar wont refresh
+# Lighter version of Refresh.sh
 # Used by automatic wallpaper change
 # Modified inorder to refresh Wallust, SwayNC only (and close an open sumi-menu)
 

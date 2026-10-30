@@ -35,8 +35,6 @@ hl.on("hyprland.start", function()
     -- hl.exec_cmd("ags")
     -- hl.exec_cmd("blueman-applet")
     -- hl.exec_cmd("rog-control-center")
-    -- waybar only when the sumi bar is off (barEnabled in ~/.config/sumi/widgets.json)
-    hl.exec_cmd("jq -e .barEnabled \"$HOME/.config/sumi/widgets.json\" >/dev/null 2>&1 || waybar")
     hl.exec_cmd("qs") -- quickshell AGS Desktop Overview alternative
 
     -- clipboard manager

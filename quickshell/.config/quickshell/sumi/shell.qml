@@ -78,6 +78,14 @@ ShellRoot {
     }
 
     IpcHandler {
+        target: "bar"
+        function toggle(): string {
+            Config.toggle("barEnabled");
+            return Config.data.barEnabled ? "on" : "off";
+        }
+    }
+
+    IpcHandler {
         target: "widgets"
 
         // toggle / on / off a desktop widget: clock calendar music weather stats

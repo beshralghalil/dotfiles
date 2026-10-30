@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
-# Scripts for refreshing ags, waybar, swaync, wallust (and closing an open sumi-menu)
+# Scripts for refreshing ags, swaync, wallust (and closing an open sumi-menu)
 
 SCRIPTSDIR=$HOME/.config/hypr/scripts
 UserScripts=$HOME/.config/hypr/UserScripts
@@ -15,7 +15,7 @@ file_exists() {
 }
 
 # Kill already running processes
-_ps=(waybar swaync ags)
+_ps=(swaync ags)
 for _prs in "${_ps[@]}"; do
   if pidof "${_prs}" >/dev/null; then
     pkill "${_prs}"
@@ -23,11 +23,6 @@ for _prs in "${_ps[@]}"; do
 done
 # sumi-menu is a script: pidof cannot see it, pkill -x can
 pkill -x sumi-menu || true
-
-# added since wallust sometimes not applying
-killall -SIGUSR2 waybar
-# Added sleep for GameMode causing multiple waybar
-sleep 0.1
 
 # quit ags & relaunch ags
 #ags -q && ags &
@@ -37,16 +32,10 @@ sleep 0.1
 pkill -xf qs && qs &
 
 # some process to kill
-for pid in $(pidof waybar swaync ags swaybg); do
+for pid in $(pidof swaync ags swaybg); do
   kill -SIGUSR1 "$pid"
   sleep 0.1
 done
-
-#Restart waybar, unless the sumi bar replaces it (barEnabled in ~/.config/sumi/widgets.json)
-sleep 0.1
-if ! jq -e '.barEnabled' "$HOME/.config/sumi/widgets.json" >/dev/null 2>&1; then
-  waybar &
-fi
 
 # relaunch swaync
 sleep 0.3

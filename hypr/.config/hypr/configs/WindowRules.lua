@@ -130,7 +130,6 @@ hl.window_rule({ match = { class = "^([Ss]team)$", title = "negative:^([Ss]team)
 hl.window_rule({ match = { title = "^(Add Folder to Workspace)$" }, float = true, size = "(monitor_w*0.7) (monitor_h*0.6)", center = true })
 hl.window_rule({ match = { title = "^(Save As)$" }, float = true, size = "(monitor_w*0.7) (monitor_h*0.6)", center = true })
 hl.window_rule({ match = { initial_title = "(Open Files)" }, float = true, size = "(monitor_w*0.7) (monitor_h*0.6)" })
-hl.window_rule({ match = { title = "^(SDDM Background)$" }, float = true, center = true, size = "(monitor_w*0.16) (monitor_h*0.12)" })
 hl.window_rule({ match = { class = "^(yad)$" }, float = true, center = true, size = "(monitor_w*0.2) (monitor_h*0.2)" })
 hl.window_rule({ match = { class = "^(hyprland-donate-screen)$" }, float = true, center = true })
 
@@ -179,7 +178,6 @@ hl.layer_rule({ match = { namespace = "notifications" }, animation = "slide" })
 
 -- Optional Layer rules
 -- SUPER SHIFT + E   Edit User Window Rules
--- hl.layer_rule({ match = { namespace = "waybar" }, blur = true })
 
 
 hl.window_rule({ name = "Picture-in-Picture", match = { title = "^[Pp]icture-in-[Pp]icture$" }, float = true, move = "72% 7%", opacity = "0.95 0.75", pin = true, keep_aspect_ratio = true, size = "(monitor_w*0.3) (monitor_h*0.3)" })

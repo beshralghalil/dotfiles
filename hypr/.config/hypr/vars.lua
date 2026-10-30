@@ -16,7 +16,7 @@ local v = {
 }
 
 -- UserConfigs/01-UserDefaults.conf stays in hyprlang-style syntax because the bash scripts
--- (WebSearch.sh, WaybarScripts.sh, Kool_Quick_Settings.sh) read it too.
+-- (WebSearch.sh, Launch.sh, Kool_Quick_Settings.sh) read it too.
 -- Here we pick up its `$name = value` and `env = NAME,value` lines so it remains the single place
 -- to set your terminal, editor, etc.
 v.env = {}

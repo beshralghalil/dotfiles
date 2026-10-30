@@ -169,7 +169,7 @@ Scope {
             run(root.scripts + "/Brightness.sh " + (arg > 0 ? "--inc" : "--dec"));
             brightRefresh.restart();
             break;
-        case "stats": run(root.scripts + "/WaybarScripts.sh " + (arg === Qt.RightButton ? "--nvtop" : "--btop")); break;
+        case "stats": run(root.scripts + "/Launch.sh " + (arg === Qt.RightButton ? "--nvtop" : "--btop")); break;
         case "volumeStep": nudge(root.sink, arg); break;
         case "mute": if (root.sink && root.sink.audio) root.sink.audio.muted = !root.sink.audio.muted; break;
         case "mixer": run("pavucontrol -t 3"); break;

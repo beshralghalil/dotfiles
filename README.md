@@ -14,8 +14,8 @@ My personal dotfiles managed with GNU Stow.
 | PDF Viewer   | Sioyek      | Research-paper PDF viewer (sepia / dark mode toggles) | `sioyek`                                        |
 | File Manager | Yazi        | Terminal file manager, configured for openners: mpv (audio, video), zathura (pdf) | `ffmpegthumbnailer`, `p7zip`, `jq`, `poppler`, `fd`, `ripgrep`, `fzf` (recommended) |
 | Desktop      | Hyprland    | Lua config (Hyprland ≥ 0.55), based on JaKooLit's Hyprland-Dots; scripts, hypridle | `hyprland`, `hypridle`, `hyprlock` (lock fallback), `awww`, `wallust`, `grim`, `slurp`, `swappy`, `cliphist`, `brightnessctl`, `jq`, `curl` |
-| Shell UI     | Quickshell (`sumi`) | 墨 black-and-white bar, launcher, menus, session menu, desktop widgets (clock, calendar, music visualizer, weather, stats); inspired by Ryoku | `quickshell` ≥ 0.3, `cava`, JetBrains Mono + Nerd Font, Noto Sans/Serif CJK JP |
-| Lock / Login | Quickshell (`sumi-lock`) | qylock "clockwork/orbital" theme (as used by Ryoku) for the lock screen and the SDDM login screen | `quickshell`, `qt6-5compat`, `sddm` (optional) |
+| Shell UI     | Quickshell (`sumi`) | 墨 black-and-white bar (replaces waybar), launcher, menus, session menu, desktop widgets (clock, calendar, music visualizer, weather, stats); inspired by Ryoku | `quickshell` ≥ 0.3, `cava`, JetBrains Mono + Nerd Font, Noto Sans/Serif CJK JP |
+| Lock / Login | Quickshell (`sumi-lock`) | qylock "clockwork/orbital" theme (as used by Ryoku) for the lock screen and the greetd login screen, with keyboard layout and battery | `quickshell`, `qt6-5compat`, `greetd` + `cage` (login screen) |
 | Menus        | `sumi-menu` | dmenu-style picker used by all scripts (replaces rofi) | the `sumi` shell running |
 | Theme        | GTK / Qt    | Graphite-Dark (GTK 3/4, libadwaita), Kvantum GraphiteDark, qt5ct/qt6ct, KDE colour scheme | `kvantum`, `qt5ct`, `qt6ct` |
 | Notifications| SwayNC      | Notification centre   | `swaync`                                                                            |
@@ -105,8 +105,9 @@ for f in assets gtk.css gtk-dark.css; do ln -sf ~/.themes/Graphite-Dark/gtk-4.0/
 # Dolphin and other KDE apps: pick the colour scheme in their own config
 kwriteconfig6 --file dolphinrc --group UiSettings --key ColorScheme GraphiteDark
 
-# Login screen (needs sudo): same theme as the lock screen
-~/.config/quickshell/sumi-lock/install-sddm-theme.sh
+# Login screen (needs sudo): greetd + cage + Quickshell, same theme as the lock screen.
+# Installs missing packages and makes greetd the display manager (replaces SDDM etc.).
+~/.config/quickshell/sumi-lock/install-greeter.sh
 ```
 
 Desktop widgets are configured in `~/.config/sumi/widgets.json` (created on first run, not tracked):

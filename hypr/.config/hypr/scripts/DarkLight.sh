@@ -21,7 +21,7 @@ pallete_dark="dark16"
 pallete_light="light16"
 
 # intial kill process
-for pid in waybar swaync ags swaybg; do
+for pid in swaync ags swaybg; do
     killall -SIGUSR1 "$pid"
 done
 
@@ -61,24 +61,6 @@ else
     sed -i 's/^palette = .*/palette = "'"$pallete_light"'"/' "$wallust_config" 
 fi
 
-# Function to set Waybar style
-set_waybar_style() {
-    theme="$1"
-    waybar_styles="$HOME/.config/waybar/style"
-    waybar_style_link="$HOME/.config/waybar/style.css"
-    style_prefix="\\[${theme}\\].*\\.css$"
-
-    style_file=$(find -L "$waybar_styles" -maxdepth 1 -type f -regex ".*$style_prefix" | shuf -n 1)
-
-    if [ -n "$style_file" ]; then
-        ln -sf "$style_file" "$waybar_style_link"
-    else
-        echo "Style file not found for $theme theme."
-    fi
-}
-
-# Call the function after determining the mode
-set_waybar_style "$next_mode"
 notify_user "$next_mode"
 
 
@@ -146,7 +128,7 @@ sed -i "s|^color_scheme_path=.*$|color_scheme_path=$qt6ct_color_scheme|" "$HOME/
 kvantummanager --set "$kvantum_theme"
 
 
-# set the background in the wallust colors-rofi template (its output is also read by sddm_wallpaper.sh)
+# set the background in the wallust colors-rofi template
 if [ "$next_mode" = "Dark" ]; then
     sed -i '/^background:/s/.*/background: rgba(0,0,0,0.7);/' $wallust_rofi
 else
@@ -239,7 +221,7 @@ ${SCRIPTSDIR}/WallustSwww.sh &&
 
 sleep 2
 # kill process
-for pid1 in waybar swaync ags swaybg; do
+for pid1 in swaync ags swaybg; do
     killall "$pid1"
 done
 pkill -x sumi-menu

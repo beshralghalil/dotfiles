@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Hyprsunset toggle + Waybar status helper
+# Hyprsunset toggle + sumi bar status helper
 # Phase 1: manual toggle only (no scheduling)
 # Icons:
 # - Off: bright sun

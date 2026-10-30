@@ -44,6 +44,12 @@ Rectangle {
     property real uiOpacity: 0
     readonly property real marginR: 80 * s
 
+    // Status (keyboard layout, battery), provided by the sumi Quickshell lock/login shells
+    readonly property string layoutLabel: (typeof keyboard !== "undefined" && keyboard.layouts && keyboard.layouts.length > 0)
+        ? keyboard.layouts[Math.min(keyboard.currentLayout, keyboard.layouts.length - 1)].shortName.toUpperCase() : ""
+    readonly property string batteryLabel: (typeof battery !== "undefined" && battery.present)
+        ? (battery.full ? "CHARGED " : battery.charging ? "CHARGING " : "BATTERY ") + battery.percent + "%" : ""
+
     // Time
     property int curH: new Date().getHours()
     property int curM: new Date().getMinutes()
@@ -227,6 +233,10 @@ Rectangle {
         id: hudContainer; anchors.fill: parent; opacity: root.uiOpacity * (root.boomOpacity > 0 ? 0 : 1)
         Row {
             anchors.right: parent.right; anchors.rightMargin: root.marginR; anchors.top: parent.top; anchors.topMargin: 50 * s; spacing: 25 * s
+            CwStatus { visible: root.layoutLabel !== ""; label: root.layoutLabel }
+            Rectangle { visible: root.layoutLabel !== ""; width: 1 * s; height: 10 * s; color: root.pillBorder; anchors.verticalCenter: parent.verticalCenter }
+            CwStatus { visible: root.batteryLabel !== ""; label: root.batteryLabel }
+            Rectangle { visible: root.batteryLabel !== ""; width: 1 * s; height: 10 * s; color: root.pillBorder; anchors.verticalCenter: parent.verticalCenter }
             CwAction { visible: !root.isQuickshell; label: (sessionHelper.currentItem ? sessionHelper.currentItem.sName : "Session"); onClicked: { if (typeof sessionModel !== "undefined") root.sessionIndex = (root.sessionIndex + 1) % sessionModel.rowCount() } }
             Rectangle { visible: !root.isQuickshell; width: 1 * s; height: 10 * s; color: root.pillBorder; anchors.verticalCenter: parent.verticalCenter }
             CwAction { label: "Reboot"; onClicked: { if (typeof sddm !== "undefined") sddm.reboot() } }
@@ -272,6 +282,8 @@ Rectangle {
                 TextInput {
                     id: passInput; anchors.fill: parent; echoMode: TextInput.Password; passwordCharacter: "✦"; color: root.dimText; font.family: outfitFont.name; font.pixelSize: 14 * s; font.letterSpacing: 10 * s; horizontalAlignment: TextInput.AlignRight; verticalAlignment: TextInput.AlignVCenter; focus: true; property bool wasClicked: false; cursorVisible: false; cursorDelegate: Item { width: 0; height: 0 }
                     Keys.onReturnPressed: startLoginSequence()
+                    // login screen tracks the keyboard layout from key presses (no layout IPC in cage)
+                    Keys.onPressed: (event) => { if (typeof keyboard !== "undefined" && keyboard.keyPressed) keyboard.keyPressed(event); event.accepted = false }
                     Text { anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter; text: "WAITING FOR KEY"; font.family: outfitFont.name; font.pixelSize: 10 * s; font.letterSpacing: 4 * s; color: root.inputWaitColor; opacity: passInput.text.length === 0 ? 0.4 : 0; Behavior on opacity { NumberAnimation { duration: 400; easing.type: Easing.InOutSine } } }
                     Rectangle {
                         id: needleCursor; width: 1.5 * s; height: 12 * s; color: root.mainText; anchors.verticalCenter: parent.verticalCenter; x: passInput.cursorRectangle.x; visible: passInput.focus && (passInput.text.length > 0 || passInput.wasClicked)
@@ -315,6 +327,10 @@ Rectangle {
         NumberAnimation { target: loginPanel; property: "anchors.rightMargin"; from: root.marginR; to: root.marginR + 10 * s; duration: 50; easing.type: Easing.InOutSine }
         NumberAnimation { target: loginPanel; property: "anchors.rightMargin"; to: root.marginR - 10 * s; duration: 50; easing.type: Easing.InOutSine }
         NumberAnimation { target: loginPanel; property: "anchors.rightMargin"; to: root.marginR; duration: 50; easing.type: Easing.InOutSine }
+    }
+    component CwStatus: Text {
+        property string label: ""
+        height: 15 * s; text: label; color: root.dimText; font.family: outfitFont.name; font.pixelSize: 10 * s; font.letterSpacing: 3 * s
     }
     component CwAction: Item {
         id: actItem; width: actTxt.width + 20 * s; height: 15 * s; property string label: ""; signal clicked()

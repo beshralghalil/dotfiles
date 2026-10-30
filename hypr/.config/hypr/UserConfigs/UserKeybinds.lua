@@ -61,10 +61,8 @@ bind(mainMod .. " + SHIFT + Return", exec(scriptsDir .. "/Dropterminal.sh " .. t
 bind(mainMod .. " + ALT + mouse_down", function() hl.exec_cmd(v.zoomCmd("* 2.0")) end, "zoom in")
 bind(mainMod .. " + ALT + mouse_up", function() hl.exec_cmd(v.zoomCmd("/ 2.0")) end, "zoom out")
 
--- Waybar / Bar related
-bind(mainMod .. " + CTRL + ALT + B", exec("pkill -SIGUSR1 waybar"), "toggle waybar on/off")
-bind(mainMod .. " + CTRL + B", exec(scriptsDir .. "/WaybarStyles.sh"), "waybar styles menu")
-bind(mainMod .. " + ALT + B", exec(scriptsDir .. "/WaybarLayout.sh"), "waybar layout menu")
+-- Bar (sumi)
+bind(mainMod .. " + CTRL + ALT + B", exec("qs -p \"$HOME/.config/quickshell/sumi\" ipc call bar toggle"), "toggle bar on/off")
 
 -- Night light toggle (Hyprsunset)
 bind(mainMod .. " + N", exec(scriptsDir .. "/Hyprsunset.sh toggle"), "toggle night light")

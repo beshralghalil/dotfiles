@@ -94,7 +94,7 @@ Singleton {
             property bool statsLocked: false
 
             // ── shell modules (off until you switch them on) ──────────────
-            property bool barEnabled: false
+            property bool barEnabled: true
             property bool launcherEnabled: false
         }
     }

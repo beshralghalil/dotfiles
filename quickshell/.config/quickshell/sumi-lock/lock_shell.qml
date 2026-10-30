@@ -16,13 +16,9 @@ ShellRoot {
     readonly property var config: sddmShim.config
     readonly property var userModel: sddmShim.userModel
     readonly property var sessionModel: sddmShim.sessionModel
-    // SDDM exposes a `keyboard` object to themes (orbital reads it); stand-in like Ryoku's shim
-    readonly property var keyboard: QtObject {
-        property bool numLock: true
-        property bool capsLock: false
-        property int currentLayout: 0
-        property var layouts: []
-    }
+    // SDDM exposes a `keyboard` object to themes (orbital reads it); here backed by Hyprland's active layout
+    readonly property var keyboard: HyprKeyboard {}
+    readonly property var battery: Battery {}
     readonly property bool isWayland: Quickshell.env("XDG_SESSION_TYPE") === "wayland"
     property bool authenticated: false
     property bool sessionLocked: true

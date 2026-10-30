@@ -46,8 +46,8 @@ hypr-lua.target = '~/.config/hypr/wallust/wallust-hyprland.lua'
 rofi.template = 'colors-rofi.rasi'
 rofi.target = '~/.config/rofi/wallust/colors-rofi.rasi'
 
-waybar.template = 'colors-waybar.css'
-waybar.target = '~/.config/waybar/wallust/colors-waybar.css'
+swaync.template = 'colors-swaync.css'
+swaync.target = '~/.config/swaync/wallust/colors.css'
 
 kitty.template = 'colors-kitty.conf'
 kitty.target = '~/.config/kitty/kitty-themes/01-Wallust.conf'
@@ -55,8 +55,6 @@ kitty.target = '~/.config/kitty/kitty-themes/01-Wallust.conf'
 quickshell.template = 'qml_color.json'
 quickshell.target = '~/.config/quickshell/qml_color.json'
 
-#swaync.template = 'colors-swaync.css'
-#swaync.target = '~/.config/swaync/wallust/colors-wallust.css'
 
 #macchina.template = 'colors-macchina.toml'
 #macchina.target = '~/.config/macchina/themes/wallust.toml'

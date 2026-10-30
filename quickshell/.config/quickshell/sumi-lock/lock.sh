@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 墨 sumi lock screen: qylock's Quickshell lockscreen with the "clockwork/orbital" theme
-# (the same theme Ryoku uses, also installable as the SDDM login theme).
+# (the same theme Ryoku uses, also the greetd login screen: install-greeter.sh).
 # Vendored from qylock (github.com/Darkkal44/qylock, GPL-3.0); see LICENSE.
 #   lock.sh [theme]      lock now (theme path relative to ./themes, default clockwork/orbital)
 # Called by hypridle's lock_cmd (loginctl lock-session / CTRL+ALT+L).
