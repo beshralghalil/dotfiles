@@ -13,7 +13,7 @@ BACKUP="$CONF.pre-sumi"
 PAM="/etc/pam.d/greetd"
 
 if [ "${1:-}" = "--remove" ]; then
-    sudo rm -rf "$DEST"
+    sudo rm -rf "$DEST" /var/cache/sumi-greeter
     if [ -f "$BACKUP" ]; then sudo mv "$BACKUP" "$CONF"; fi
     echo "Removed $DEST and restored $CONF."
     exit 0
@@ -36,7 +36,8 @@ if command -v hyprctl >/dev/null && hyprctl version >/dev/null 2>&1; then
     options=$(hyprctl getoption input:kb_options -j | jq -r '.str // empty')
 fi
 
-# greeter files
+# greeter files; a cache dir the greeter user can write (Mesa/cage shader cache)
+sudo install -d -o greeter -g greeter -m 700 /var/cache/sumi-greeter
 sudo rm -rf "$DEST"
 sudo mkdir -p "$DEST"
 sudo cp -r "$DIR"/{greeter.qml,greeter.sh,shim,imports,themes,LICENSE} "$DEST"/
@@ -50,7 +51,7 @@ sudo tee "$CONF" >/dev/null <<EOF
 vt = 1
 
 [default_session]
-command = "systemd-cat -t sumi-greeter env XKB_DEFAULT_LAYOUT=$layout XKB_DEFAULT_OPTIONS=$options cage -s -d -- $DEST/greeter.sh"
+command = "systemd-cat -t sumi-greeter env XDG_CACHE_HOME=/var/cache/sumi-greeter XKB_DEFAULT_LAYOUT=$layout XKB_DEFAULT_OPTIONS=$options cage -s -d -- $DEST/greeter.sh"
 user = "greeter"
 EOF
 
