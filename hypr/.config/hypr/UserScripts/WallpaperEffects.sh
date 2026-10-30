@@ -9,7 +9,7 @@ wallpaper_output="$HOME/.config/hypr/wallpaper_effects/.wallpaper_modified"
 SCRIPTSDIR="$HOME/.config/hypr/scripts"
 focused_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
 
-# Directory for swaync
+# Notification icons
 iDIR="$HOME/.config/swaync/images"
 iDIRi="$HOME/.config/swaync/icons"
 

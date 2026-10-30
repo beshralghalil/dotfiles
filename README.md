@@ -18,7 +18,7 @@ My personal dotfiles managed with GNU Stow.
 | Lock / Login | Quickshell (`sumi-lock`) | qylock "clockwork/orbital" theme (as used by Ryoku) for the lock screen and the greetd login screen, with keyboard layout and battery | `quickshell`, `qt6-5compat`, `greetd` + `cage` (login screen) |
 | Menus        | `sumi-menu` | dmenu-style picker used by all scripts (replaces rofi) | the `sumi` shell running |
 | Theme        | GTK / Qt    | Graphite-Dark (GTK 3/4, libadwaita), Kvantum GraphiteDark, qt5ct/qt6ct, KDE colour scheme | `kvantum`, `qt5ct`, `qt6ct` |
-| Notifications| SwayNC      | Notification centre   | `swaync`                                                                            |
+| Notifications| Quickshell (`sumi`) | Notification daemon, toasts and centre (replaces swaync); low-battery alerts (replaces batsignal) | `libnotify` (`notify-send`, used by scripts) |
 | Colours      | Wallust     | Wallpaper-derived colours (templates incl. Hyprland Lua) | `wallust`                                                         |
 
 ## Directory Layout
@@ -32,7 +32,7 @@ My personal dotfiles managed with GNU Stow.
 ├── quickshell/      # sumi shell, sumi-lock, overview
 ├── sioyek/
 ├── sumi-menu/
-├── swaync/
+├── swaync/         # notification icons/images used by the hypr scripts (swaync itself is replaced by sumi)
 ├── theme/           # GTK/Qt/Kvantum/KDE colours + Graphite-Dark
 ├── wallust/
 ├── yazi/

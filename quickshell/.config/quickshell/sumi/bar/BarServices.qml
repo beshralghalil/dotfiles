@@ -7,7 +7,6 @@ import Quickshell.Io
 //   cpu / mem / temp   /proc + hwmon (cpu + dGPU temp), every `statsInterval` ms
 //   brightness         `brightnessctl -m`, every 5 s (and on refreshBrightness())
 //   nightlight         hyprsunset process / state file, every 3 s
-//   notifications      `swaync-client -swb` event stream (count + dnd)
 Scope {
     id: root
 
@@ -21,8 +20,6 @@ Scope {
     property real gpuTemp: -1          // discrete GPU, °C
     property real brightness: -1       // 0..1
     property bool nightlight: false
-    property int notifCount: 0
-    property bool notifDnd: false
 
     function refreshBrightness() { if (root.running) brightProc.running = true }
     function refreshNightlight() { if (root.running) nightProc.running = true }
@@ -105,28 +102,4 @@ Scope {
         triggeredOnStart: true
         onTriggered: nightProc.running = true
     }
-
-    // ── notifications: swaync-client streams one JSON line per change ─────
-    //   {"text": "3", "alt": "dnd-notification", "class": ..., "tooltip": ...}
-    Process {
-        id: swayncProc
-        command: ["swaync-client", "-swb"]
-        stdout: SplitParser {
-            onRead: line => {
-                try {
-                    const j = JSON.parse(line);
-                    root.notifCount = parseInt(j.text) || 0;
-                    root.notifDnd = (j.alt || "").indexOf("dnd") >= 0;
-                } catch (e) {}
-            }
-        }
-    }
-    Timer { // (re)start the stream; covers swaync restarts and a late daemon
-        interval: 10000
-        repeat: true
-        running: root.running
-        triggeredOnStart: true
-        onTriggered: if (!swayncProc.running) swayncProc.running = true
-    }
-    onRunningChanged: if (!running) swayncProc.running = false
 }

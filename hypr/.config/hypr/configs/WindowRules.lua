@@ -35,9 +35,6 @@ hl.window_rule({ match = { class = "^([Bb]rave-browser(-beta|-dev|-unstable)?)$"
 hl.window_rule({ match = { class = "^([Tt]horium-browser|[Cc]achy-browser)$" }, tag = "+browser" })
 hl.window_rule({ match = { class = "^(zen-alpha|zen)$" }, tag = "+browser" })
 
--- notif tags
-hl.window_rule({ match = { class = "^(swaync-control-center|swaync-notification-window|swaync-client|class)$" }, tag = "+notif" })
-
 -- KooL settings tag
 hl.window_rule({ match = { title = "^(KooL Quick Cheat Sheet)$" }, tag = "+KooL_Cheat" })
 hl.window_rule({ match = { title = "^(KooL Hyprland Settings)$" }, tag = "+KooL_Settings" })
@@ -130,7 +127,6 @@ hl.window_rule({ match = { class = "^([Ss]team)$", title = "negative:^([Ss]team)
 hl.window_rule({ match = { title = "^(Add Folder to Workspace)$" }, float = true, size = "(monitor_w*0.7) (monitor_h*0.6)", center = true })
 hl.window_rule({ match = { title = "^(Save As)$" }, float = true, size = "(monitor_w*0.7) (monitor_h*0.6)", center = true })
 hl.window_rule({ match = { initial_title = "(Open Files)" }, float = true, size = "(monitor_w*0.7) (monitor_h*0.6)" })
-hl.window_rule({ match = { class = "^(yad)$" }, float = true, center = true, size = "(monitor_w*0.2) (monitor_h*0.2)" })
 hl.window_rule({ match = { class = "^(hyprland-donate-screen)$" }, float = true, center = true })
 
 -- SIZE

@@ -7,7 +7,6 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("blueman-applet")
     hl.exec_cmd("qs")
     -- KeybindsLayoutInit.sh is no longer needed: SUPER+J/K are bound in configs/Keybinds.lua
-    hl.exec_cmd("batsignal -d 20 -c 25 -w 30 -p -b")
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
     hl.exec_cmd("emacs --daemon")
     -- delayed so its tray icon registers with the sumi bar (it does not re-register later)

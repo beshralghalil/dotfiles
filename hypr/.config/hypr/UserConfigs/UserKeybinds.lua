@@ -26,7 +26,6 @@ bind(mainMod .. " + Return", exec(term), "Open terminal")
 bind(mainMod .. " + E", exec(emacs), "Open emacs client")
 
 -- FEATURES / EXTRAS
-bind(mainMod .. " + ALT + H", exec(scriptsDir .. "/KeyHints.sh"), "help / cheat sheet")
 bind(mainMod .. " + ALT + R", exec(scriptsDir .. "/Refresh.sh"), "refresh bar and menus")
 bind(mainMod .. " + ALT + E", exec(scriptsDir .. "/Emoji.sh"), "emoji menu")
 bind(mainMod .. " + S", exec(scriptsDir .. "/WebSearch.sh"), "web search")

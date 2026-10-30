@@ -8,7 +8,6 @@ wallpaper_base_path="$HOME/Pictures/wallpapers/Dynamic-Wallpapers"
 dark_wallpapers="$wallpaper_base_path/Dark"
 light_wallpapers="$wallpaper_base_path/Light"
 hypr_config_path="$HOME/.config/hypr"
-swaync_style="$HOME/.config/swaync/style.css"
 ags_style="$HOME/.config/ags/user/style.css"
 SCRIPTSDIR="$HOME/.config/hypr/scripts"
 notif="$HOME/.config/swaync/images/bell.png"
@@ -21,7 +20,7 @@ pallete_dark="dark16"
 pallete_light="light16"
 
 # intial kill process
-for pid in swaync ags swaybg; do
+for pid in ags swaybg; do
     killall -SIGUSR1 "$pid"
 done
 
@@ -63,15 +62,6 @@ fi
 
 notify_user "$next_mode"
 
-
-# swaync color change
-if [ "$next_mode" = "Dark" ]; then
-    sed -i '/@define-color noti-bg/s/rgba([0-9]*,\s*[0-9]*,\s*[0-9]*,\s*[0-9.]*);/rgba(0, 0, 0, 0.8);/' "${swaync_style}"
-	#sed -i '/@define-color noti-bg-alt/s/#.*;/#111111;/' "${swaync_style}"
-else
-    sed -i '/@define-color noti-bg/s/rgba([0-9]*,\s*[0-9]*,\s*[0-9]*,\s*[0-9.]*);/rgba(255, 255, 255, 0.9);/' "${swaync_style}"
-	#sed -i '/@define-color noti-bg-alt/s/#.*;/#F0F0F0;/' "${swaync_style}"
-fi
 
 # ags color change
 if command -v ags >/dev/null 2>&1; then    
@@ -221,7 +211,7 @@ ${SCRIPTSDIR}/WallustSwww.sh &&
 
 sleep 2
 # kill process
-for pid1 in swaync ags swaybg; do
+for pid1 in ags swaybg; do
     killall "$pid1"
 done
 pkill -x sumi-menu

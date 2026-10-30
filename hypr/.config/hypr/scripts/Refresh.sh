@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
-# Scripts for refreshing ags, swaync, wallust (and closing an open sumi-menu)
+# Scripts for refreshing ags, wallust (and closing an open sumi-menu)
 
 SCRIPTSDIR=$HOME/.config/hypr/scripts
 UserScripts=$HOME/.config/hypr/UserScripts
@@ -15,7 +15,7 @@ file_exists() {
 }
 
 # Kill already running processes
-_ps=(swaync ags)
+_ps=(ags)
 for _prs in "${_ps[@]}"; do
   if pidof "${_prs}" >/dev/null; then
     pkill "${_prs}"
@@ -32,16 +32,10 @@ pkill -x sumi-menu || true
 pkill -xf qs && qs &
 
 # some process to kill
-for pid in $(pidof swaync ags swaybg); do
+for pid in $(pidof ags swaybg); do
   kill -SIGUSR1 "$pid"
   sleep 0.1
 done
-
-# relaunch swaync
-sleep 0.3
-swaync >/dev/null 2>&1 &
-# reload swaync
-swaync-client --reload-config
 
 # Rainbow borders disabled on purpose (random-colour window borders were unwanted).
 # To re-enable, run ${UserScripts}/RainbowBorders.sh from here.

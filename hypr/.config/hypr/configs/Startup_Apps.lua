@@ -31,7 +31,6 @@ hl.on("hyprland.start", function()
     -- startup apps
     hl.exec_cmd("nm-applet --indicator")
     hl.exec_cmd("nm-tray")   -- For ubuntu
-    hl.exec_cmd("swaync")
     -- hl.exec_cmd("ags")
     -- hl.exec_cmd("blueman-applet")
     -- hl.exec_cmd("rog-control-center")

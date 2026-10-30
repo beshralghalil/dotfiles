@@ -17,7 +17,7 @@ bind(mainMod .. " + Q", hl.dsp.window.close(), "close active window")
 bind(mainMod .. " + SHIFT + Q", exec(scriptsDir .. "/KillActiveProcess.sh"), "Terminate active process")
 bind("CTRL + ALT + L", exec(scriptsDir .. "/LockScreen.sh"), "lock screen")
 bind("CTRL + ALT + P", exec(scriptsDir .. "/Wlogout.sh"), "powermenu")
-bind(mainMod .. " + SHIFT + N", exec("swaync-client -t -sw"), "notification panel")
+bind(mainMod .. " + SHIFT + N", exec("qs -p \"$HOME/.config/quickshell/sumi\" ipc call notifications toggle"), "notification center")
 bind(mainMod .. " + SHIFT + E", exec(scriptsDir .. "/Kool_Quick_Settings.sh"), "Quick settings menu")
 
 -- Master Layout
@@ -84,7 +84,7 @@ bind(mainMod .. " + SHIFT + down", hl.dsp.window.resize({ x = 0, y = 50, relativ
 -- Move windows
 bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left" }), "move window left")
 bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right" }), "move window right")
-bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up" }), "move window up")
+-- (SUPER+SHIFT+K is the keybind search, UserConfigs/UserKeybinds.lua; SUPER+ALT+K swaps up)
 bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down" }), "move window down")
 
 -- Swap windows

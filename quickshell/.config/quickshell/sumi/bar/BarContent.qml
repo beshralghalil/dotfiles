@@ -183,7 +183,7 @@ Item {
             onStep: dir => bar.action("workspaceStep", dir)
         }
         Dot {}
-        Chip { // notifications (swaync): bell / bell-off when do-not-disturb
+        Chip { // notifications (sumi center): bell / bell-off when do-not-disturb
             spacing: 4
             onClicked: b => bar.action(b === Qt.RightButton ? "notifDnd" : "notif", null)
             Seal {

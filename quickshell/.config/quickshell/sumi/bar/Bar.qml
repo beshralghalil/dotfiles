@@ -36,6 +36,7 @@ Scope {
     property real volumeMax: 1.0
     property string scripts: Quickshell.env("HOME") + "/.config/hypr/scripts"
     property string launcherCommand: "qs -p " + Quickshell.env("HOME") + "/.config/quickshell/sumi ipc call launcher toggle"
+    property string notificationsCommand: "qs -p " + Quickshell.env("HOME") + "/.config/quickshell/sumi ipc call notifications toggle"
     property string launcherAltCommand: Quickshell.env("HOME") + "/.config/hypr/UserScripts/WallpaperSelect.sh"
 
     // ── state ──────────────────────────────────────────────────────────────
@@ -163,8 +164,8 @@ Scope {
             dispatch('hl.dsp.focus({ workspace = "' + s + '" })', "workspace " + s);
             break;
         }
-        case "notif": run("swaync-client -t -sw"); break;
-        case "notifDnd": run("swaync-client -d -sw"); break;
+        case "notif": run(root.notificationsCommand); break;
+        case "notifDnd": Notifs.toggleDnd(); break;
         case "brightnessStep":
             run(root.scripts + "/Brightness.sh " + (arg > 0 ? "--inc" : "--dec"));
             brightRefresh.restart();
@@ -257,8 +258,8 @@ Scope {
                 workspaces: root.workspacesFor(win.monitor)
                 trayComponent: trayComp
 
-                notifCount: services.notifCount
-                notifDnd: services.notifDnd
+                notifCount: Notifs.count
+                notifDnd: Notifs.dnd
                 idleInhibit: root.idleInhibit
                 nightlight: services.nightlight
                 brightness: services.brightness

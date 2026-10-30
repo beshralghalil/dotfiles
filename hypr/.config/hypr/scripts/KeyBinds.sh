@@ -2,9 +2,6 @@
 # /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
 # searchable enabled keybinds using sumi-menu (supports bindd descriptions)
 
-# kill yad to not interfere with this binds
-pkill yad || true
-
 # close an open sumi-menu first
 if pgrep -x sumi-menu >/dev/null; then
   pkill -x sumi-menu

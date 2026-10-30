@@ -96,6 +96,16 @@ Singleton {
             // ── shell modules (off until you switch them on) ──────────────
             property bool barEnabled: true
             property bool launcherEnabled: false
+
+            // ── notifications (sumi is the notification daemon) ──────────
+            property bool notifDnd: false
+            property int notifPopupMs: 6000
+
+            // ── battery alerts (percent; 0 disables a level) ──────────────
+            property int batteryWarn: 30
+            property int batteryCritical: 25
+            property int batteryDanger: 20
+            property bool batteryPlugMessages: true   // "charging" / "discharging"
         }
     }
 }

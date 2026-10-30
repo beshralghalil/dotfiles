@@ -3,7 +3,7 @@
 
 # Lighter version of Refresh.sh
 # Used by automatic wallpaper change
-# Modified inorder to refresh Wallust, SwayNC only (and close an open sumi-menu)
+# Modified inorder to refresh Wallust only (and close an open sumi-menu)
 
 SCRIPTSDIR=$HOME/.config/hypr/scripts
 UserScripts=$HOME/.config/hypr/UserScripts
@@ -30,9 +30,6 @@ pkill -xf qs && qs &
 # Wallust refresh (synchronous to ensure colors are ready)
 ${SCRIPTSDIR}/WallustSwww.sh
 sleep 0.2
-
-# reload swaync
-swaync-client --reload-config
 
 # Rainbow borders disabled on purpose (random-colour window borders were unwanted).
 # To re-enable, run ${UserScripts}/RainbowBorders.sh from here.

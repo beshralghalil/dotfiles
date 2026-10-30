@@ -16,6 +16,7 @@ import "bar"
 import "launcher"
 import "picker"
 import "session"
+import "notifications"
 
 ShellRoot {
     Desktop {}
@@ -35,6 +36,21 @@ ShellRoot {
     }
 
     // lock screen: separate process, see ~/.config/quickshell/sumi-lock (qylock "orbital" theme)
+
+    // notification daemon (services/Notifs) + toasts + center; low-battery alerts
+    Popups { suppressed: notifCenter.open }
+    Center { id: notifCenter }
+    BatteryAlerts {}
+
+    IpcHandler {
+        target: "notifications"
+        function toggle(): string { notifCenter.toggle(); return notifCenter.open ? "open" : "closed"; }
+        function open(): string { notifCenter.show(); return "open"; }
+        function close(): string { notifCenter.hide(); return "closed"; }
+        function dnd(): string { Notifs.toggleDnd(); return Notifs.dnd ? "dnd on" : "dnd off"; }
+        function clear(): string { Notifs.clearAll(); return "cleared"; }
+        function count(): int { return Notifs.count; }
+    }
 
     IpcHandler {
         target: "launcher"
