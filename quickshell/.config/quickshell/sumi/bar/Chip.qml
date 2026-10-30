@@ -28,7 +28,7 @@ Item {
         radius: Theme.radius
         color: Theme.hover
         opacity: chip.interactive && mouse.containsMouse ? 1 : 0
-        Behavior on opacity { NumberAnimation { duration: 140 } }
+        Behavior on opacity { NumberAnimation { duration: Theme.ms(140) } }
     }
 
     Row {

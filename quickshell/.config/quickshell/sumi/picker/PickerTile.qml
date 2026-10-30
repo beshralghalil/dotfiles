@@ -48,7 +48,7 @@ Item {
             cache: false
             smooth: true
             opacity: tile.selected ? 1 : 0.78
-            Behavior on opacity { NumberAnimation { duration: 90 } }
+            Behavior on opacity { NumberAnimation { duration: Theme.ms(90) } }
         }
         L.AppIcon {
             anchors.centerIn: parent

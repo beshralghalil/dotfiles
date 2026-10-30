@@ -67,7 +67,7 @@ Row {
                 height: 1
                 width: parent.width * Math.max(0, Math.min(1, r.frac))
                 color: r.dim ? Theme.inkDim : Theme.ink
-                Behavior on width { NumberAnimation { duration: 400; easing.type: Easing.OutCubic } }
+                Behavior on width { NumberAnimation { duration: Theme.ms(400); easing.type: Easing.OutCubic } }
             }
         }
     }

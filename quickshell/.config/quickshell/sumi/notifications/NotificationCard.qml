@@ -165,7 +165,7 @@ Rectangle {
                         width: parent.width * card.value / 100
                         height: parent.height
                         color: Theme.ink
-                        Behavior on width { NumberAnimation { duration: 120 } }
+                        Behavior on width { NumberAnimation { duration: Theme.ms(120) } }
                     }
                 }
             }

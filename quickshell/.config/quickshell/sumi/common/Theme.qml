@@ -21,6 +21,10 @@ QtObject {
 
     readonly property int radius: 4
 
+    // animation speed: every sumi duration goes through ms(); 0.7 = 30% faster
+    readonly property real animScale: 0.7
+    function ms(d) { return Math.round(d * animScale) }
+
     readonly property var weekdayKanji: ["日", "月", "火", "水", "木", "金", "土"]
     readonly property var weekdayLatin: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
     // traditional month names (和風月名)

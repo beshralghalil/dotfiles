@@ -24,7 +24,7 @@ Item {
         color: seal.filled ? Theme.ink : "transparent"
         border.width: seal.outlined && !seal.filled ? 1 : 0
         border.color: Theme.hairline
-        Behavior on color { ColorAnimation { duration: 160 } }
+        Behavior on color { ColorAnimation { duration: Theme.ms(160) } }
     }
     Text {
         anchors.centerIn: parent
@@ -34,6 +34,6 @@ Item {
         font.family: seal.family
         font.weight: Font.Normal
         font.pixelSize: seal.glyphSize
-        Behavior on color { ColorAnimation { duration: 160 } }
+        Behavior on color { ColorAnimation { duration: Theme.ms(160) } }
     }
 }

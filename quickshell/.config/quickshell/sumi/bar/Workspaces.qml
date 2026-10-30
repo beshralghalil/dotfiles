@@ -63,7 +63,7 @@ Item {
                          : hover.containsMouse ? Theme.hover : "transparent"
                     border.width: cellItem.modelData.urgent && !cellItem.modelData.active ? 1 : 0
                     border.color: Theme.ink
-                    Behavior on color { ColorAnimation { duration: 160 } }
+                    Behavior on color { ColorAnimation { duration: Theme.ms(160) } }
                 }
                 Text {
                     id: text_
@@ -76,7 +76,7 @@ Item {
                     font.weight: cellItem.kanji ? (cellItem.modelData.active ? Font.Black : Font.Normal) : Font.Light
                     font.styleName: cellItem.kanji ? "" : (cellItem.modelData.active ? "Regular" : "Light")
                     font.pixelSize: cellItem.kanji ? 14 : 14
-                    Behavior on color { ColorAnimation { duration: 160 } }
+                    Behavior on color { ColorAnimation { duration: Theme.ms(160) } }
                 }
                 MouseArea {
                     id: hover

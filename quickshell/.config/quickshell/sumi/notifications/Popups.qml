@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
+import "../common"
 import "../services"
 
 // Notification toasts: top-centre of the focused monitor (like the old swaync), under the bar (exclusive zone 0
@@ -55,17 +56,17 @@ PanelWindow {
         model: cards
 
         add: Transition {
-            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 180; easing.type: Easing.OutCubic }
-            NumberAnimation { property: "scale"; from: 0.95; to: 1; duration: 220; easing.type: Easing.OutCubic }
+            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Theme.ms(180); easing.type: Easing.OutCubic }
+            NumberAnimation { property: "scale"; from: 0.95; to: 1; duration: Theme.ms(220); easing.type: Easing.OutCubic }
         }
         remove: Transition {
-            NumberAnimation { property: "opacity"; to: 0; duration: 160; easing.type: Easing.InCubic }
-            NumberAnimation { property: "scale"; to: 0.95; duration: 160; easing.type: Easing.InCubic }
+            NumberAnimation { property: "opacity"; to: 0; duration: Theme.ms(160); easing.type: Easing.InCubic }
+            NumberAnimation { property: "scale"; to: 0.95; duration: Theme.ms(160); easing.type: Easing.InCubic }
         }
         displaced: Transition {
-            NumberAnimation { property: "y"; duration: 200; easing.type: Easing.OutCubic }
-            NumberAnimation { property: "opacity"; to: 1; duration: 120 }
-            NumberAnimation { property: "scale"; to: 1; duration: 120 }
+            NumberAnimation { property: "y"; duration: Theme.ms(200); easing.type: Easing.OutCubic }
+            NumberAnimation { property: "opacity"; to: 1; duration: Theme.ms(120) }
+            NumberAnimation { property: "scale"; to: 1; duration: Theme.ms(120) }
         }
 
         delegate: NotificationCard {

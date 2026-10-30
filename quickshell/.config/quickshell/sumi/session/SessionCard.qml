@@ -51,7 +51,7 @@ Item {
                     width: 132; height: 150
                     radius: Theme.radius + 2
                     color: active ? Theme.ink : Theme.card
-                    Behavior on color { ColorAnimation { duration: 120 } }
+                    Behavior on color { ColorAnimation { duration: Theme.ms(120) } }
 
                     Column {
                         anchors.centerIn: parent

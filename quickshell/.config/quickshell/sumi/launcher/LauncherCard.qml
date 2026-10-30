@@ -76,7 +76,7 @@ Rectangle {
     border.width: 1
     clip: true
 
-    Behavior on height { NumberAnimation { duration: 120; easing.type: Easing.OutCubic } }
+    Behavior on height { NumberAnimation { duration: Theme.ms(120); easing.type: Easing.OutCubic } }
 
     // swallow clicks on the card so they don't fall through to the click-out scrim
     MouseArea { anchors.fill: parent; acceptedButtons: Qt.AllButtons }

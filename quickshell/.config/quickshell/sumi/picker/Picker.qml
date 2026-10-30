@@ -9,8 +9,10 @@ import "match.js" as Match
 // 墨 picker: the dmenu-style menu behind ~/.local/bin/sumi-menu (rofi -dmenu flags).
 //
 // The shim writes a request (JSON) plus the raw stdin rows to
-// $XDG_RUNTIME_DIR/sumi-picker/, calls `ipc call picker open <request>` and
-// waits for `<request>.result`, which this writes (atomically) when the menu
+// $XDG_RUNTIME_DIR/sumi-picker/, then writes the request path into
+// $XDG_RUNTIME_DIR/sumi-picker/open (watched here; this answers with
+// `<request>.ack`), or calls `ipc call picker open <request>` when no ack comes,
+// and waits for `<request>.result`, which this writes (atomically) when the menu
 // closes:
 //
 //   line 1   exit code (0 accept, 1 cancel, 10.. -kb-custom-N)
@@ -49,6 +51,8 @@ Scope {
 
     // ── IPC entry points (wired in shell.qml) ──────────────────────────────
     function openRequest(path) {
+        // the same request again (file watch + fallback ipc): already showing it
+        if (root.open && root.requestPath === path) return "open";
         let r;
         try {
             reqReader.path = path;
@@ -361,6 +365,34 @@ Scope {
     }
 
     FileView { id: reqReader; blockAllReads: true; printErrors: false; preload: false }
+
+    // ── fast path: sumi-menu writes a request path into <spool>/open ──────
+    // A file watch instead of a `qs ipc` process per menu (~90 ms saved).
+    readonly property string spoolDir: (Quickshell.env("XDG_RUNTIME_DIR") || "/tmp") + "/sumi-picker"
+    function onTrigger(text) {
+        const path = (text || "").trim();
+        if (path === "" || !path.startsWith(root.spoolDir + "/")) return;
+        const r = root.openRequest(path);
+        if (r.startsWith("error: bad request")) return;   // stale trigger (request already gone)
+        ackWriter.path = path + ".ack";
+        ackWriter.setText(r + "\n");
+        ackWriter.path = "";
+    }
+    Process { // make sure the trigger exists before watching it
+        running: true
+        command: ["sh", "-c", "mkdir -p -m 700 \"$1\" && touch \"$1/open\"", "sh", root.spoolDir]
+        onExited: trigger.path = root.spoolDir + "/open"
+    }
+    FileView {
+        id: trigger
+        watchChanges: true
+        printErrors: false
+        // only react to changes: the first load may hold a request from before a reload
+        property bool primed: false
+        onFileChanged: { primed = true; reload(); }
+        onLoaded: if (primed) root.onTrigger(text())
+    }
+    FileView { id: ackWriter; blockWrites: true; atomicWrites: true; printErrors: false; preload: false }
     FileView { id: itemsReader; blockAllReads: true; printErrors: false; preload: false }
     FileView { id: resultWriter; blockWrites: true; atomicWrites: true; printErrors: false; preload: false }
 

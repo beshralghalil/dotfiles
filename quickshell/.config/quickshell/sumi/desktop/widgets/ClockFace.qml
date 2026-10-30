@@ -144,7 +144,7 @@ Item {
                     color: face.ink
                     Behavior on width {
                         enabled: face.ss !== 0
-                        NumberAnimation { duration: 900; easing.type: Easing.OutCubic }
+                        NumberAnimation { duration: Theme.ms(900); easing.type: Easing.OutCubic }
                     }
                 }
             }

@@ -216,6 +216,8 @@ hl.layer_rule({ match = { namespace = "wallpaper" }, blur = true })
 hl.layer_rule({ match = { namespace = "notifications" }, animation = "slide" })
 -- 墨 sumi desktop widgets surface: appear in place, no slide-in
 hl.layer_rule({ match = { namespace = "^sumi-desktop$" }, no_anim = true })
+-- sumi menus: quick fade instead of the layer slide
+hl.layer_rule({ match = { namespace = "^sumi-(picker|launcher|session|notification-center)$" }, animation = "fade" })
 
 -- Optional Layer rules
 -- SUPER SHIFT + E   Edit User Window Rules

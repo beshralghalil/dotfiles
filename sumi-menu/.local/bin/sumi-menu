@@ -22,7 +22,8 @@
 # `pkill -x sumi-menu` (or ^C) closes the menu it has open and exits 1.
 #
 # Protocol: the request is a JSON file in $XDG_RUNTIME_DIR/sumi-picker/ (rows
-# in <request>.items, raw); `qs ipc call picker open <request>` shows it; the
+# in <request>.items, raw); writing its path into $XDG_RUNTIME_DIR/sumi-picker/open
+# shows it (the shell answers <request>.ack; else `qs ipc call picker open`); the
 # shell writes <request>.result: code / kind (items|custom|none) / filter /
 # payload (row indices, or the typed text).
 
@@ -155,7 +156,7 @@ req=$(mktemp "$rt/req.XXXXXXXX") || fail "cannot create a request file in $rt"
 items=$req.items
 result=$req.result
 
-cleanup() { rm -f -- "$req" "$items" "$result" "$req.tmp"; }
+cleanup() { rm -f -- "$req" "$items" "$result" "$req.tmp" "$req.ack"; }
 trap cleanup EXIT
 
 # rows: -input FILE, else stdin (never block on a terminal)
@@ -201,7 +202,14 @@ on_signal() {
 }
 trap on_signal INT TERM HUP
 
-r=$(ipc picker open "$req")
+# fast path: the shell watches $rt/open and acks within a few ms; `qs ipc` (~90 ms) is the fallback
+exec {tick}<> <(:)
+printf '%s\n' "$req" >"$rt/open"
+for ((i = 0; i < 25; i++)); do
+    [[ -e $req.ack ]] && break
+    read -r -t 0.01 -u "$tick" _
+done
+if [[ -e $req.ack ]]; then r=$(<"$req.ack"); else r=$(ipc picker open "$req"); fi
 if [[ $r != open ]]; then
     [[ -n $r ]] && fail "picker: $r"
     fail "$NOT_RUNNING"
@@ -209,11 +217,10 @@ fi
 
 # wait for the answer without forking a sleep every tick; every ~second make
 # sure the shell still has our request open (it may have died or reloaded)
-exec {tick}<> <(:)
 t=0
 while [[ ! -e $result ]]; do
-    read -r -t 0.05 -u "$tick" _
-    if (( ++t % 20 == 0 )) && [[ ! -e $result ]]; then
+    read -r -t 0.02 -u "$tick" _
+    if (( ++t % 50 == 0 )) && [[ ! -e $result ]]; then
         st=$(ipc picker status "$req")
         [[ -e $result ]] && break
         [[ $st == active ]] || exit 1

@@ -103,7 +103,7 @@ Item {
                 height: parent.height
                 width: parent.width * Math.max(0, Math.min(1, frac))
                 color: Theme.ink
-                Behavior on width { NumberAnimation { duration: 600; easing.type: Easing.OutCubic } }
+                Behavior on width { NumberAnimation { duration: Theme.ms(600); easing.type: Easing.OutCubic } }
             }
         }
     }
