@@ -12,7 +12,10 @@ current_rate() {
 }
 
 set_rate() { # $1 = rate, $2 = notification text (optional)
-    hyprctl eval "hl.monitor({ output = \"$MON\", mode = \"${RES}@$1\", position = \"0x0\", scale = 1 })" >/dev/null
+    # keep the scale/position from monitors.lua; only the refresh rate changes
+    local scale pos
+    read -r scale pos < <(hyprctl monitors -j | jq -r --arg m "$MON" '.[] | select(.name == $m) | "\(.scale) \(.x)x\(.y)"')
+    hyprctl eval "hl.monitor({ output = \"$MON\", mode = \"${RES}@$1\", position = \"${pos:-0x0}\", scale = ${scale:-1} })" >/dev/null
     [ -n "$2" ] && notify-send -a "Display" -i video-display \
         -h string:x-canonical-private-synchronous:refresh-rate "Refresh rate: $1 Hz" "$2"
 }
