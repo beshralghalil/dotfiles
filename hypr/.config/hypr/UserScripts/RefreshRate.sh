@@ -8,14 +8,11 @@ LOW=60
 AC_ONLINE=/sys/class/power_supply/ACAD/online
 
 current_rate() {
-    hyprctl monitors -j | jq -r --arg m "$MON" '.[] | select(.name == $m) | .refreshRate | round'
+    wlr-randr --json | jq -r --arg m "$MON" '.[] | select(.name == $m) | .modes[] | select(.current) | .refresh | round'
 }
 
 set_rate() { # $1 = rate, $2 = notification text (optional)
-    # keep the scale/position from monitors.lua; only the refresh rate changes
-    local scale pos
-    read -r scale pos < <(hyprctl monitors -j | jq -r --arg m "$MON" '.[] | select(.name == $m) | "\(.scale) \(.x)x\(.y)"')
-    hyprctl eval "hl.monitor({ output = \"$MON\", mode = \"${RES}@$1\", position = \"${pos:-0x0}\", scale = ${scale:-1} })" >/dev/null
+    wlr-randr --output "$MON" --mode "${RES}@$1" >/dev/null
     [ -n "$2" ] && notify-send -a "Display" -i video-display \
         -h string:x-canonical-private-synchronous:refresh-rate "Refresh rate: $1 Hz" "$2"
 }

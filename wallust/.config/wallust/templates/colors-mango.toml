@@ -1,0 +1,6 @@
+# wallust template - colors-mango (sourced by ~/.config/mango/config.toml)
+[global]
+border_color = 0x{{color1 | strip}}ff
+focus_color = 0x{{color10 | strip}}ff
+root_color = 0x{{background | strip}}ff
+scratchpad_color = 0x{{color12 | strip}}ff

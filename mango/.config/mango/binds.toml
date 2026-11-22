@@ -1,0 +1,181 @@
+# Keybinds — translated from hypr configs/Keybinds.lua, UserConfigs/UserKeybinds.lua, UserConfigs/Laptops.lua
+# Mango binds by keycode, so they keep working on the Arabic layout too.
+
+[bind.default]
+# ---- session ----
+"CTRL+ALT+Delete" = "quit"
+"SUPER+CTRL+r" = "reload_config"
+"SUPER+q" = "killclient"
+"SUPER+SHIFT+q" = "spawn_shell,$HOME/.config/hypr/scripts/KillActiveProcess.sh"
+"CTRL+ALT+p" = "spawn_shell,$HOME/.config/hypr/scripts/Wlogout.sh"
+
+# ---- apps / sumi shell ----
+"SUPER+d" = "spawn_shell,qs -p $HOME/.config/quickshell/sumi ipc call launcher toggle"
+"SUPER+CTRL+s" = "spawn_shell,qs -p $HOME/.config/quickshell/sumi ipc call picker windows"
+"SUPER+SHIFT+n" = "spawn_shell,qs -p $HOME/.config/quickshell/sumi ipc call notifications toggle"
+"SUPER+CTRL+ALT+b" = "spawn_shell,qs -p $HOME/.config/quickshell/sumi ipc call bar toggle"
+"SUPER+Return" = "spawn,kitty"
+"SUPER+e" = "spawn_shell,emacsclient -a '' -c"
+"SUPER+b" = "spawn_shell,xdg-open https://"
+"SUPER+SHIFT+Return" = "toggle_named_scratchpad,kitty-dropterm,none,kitty --class kitty-dropterm"
+"SUPER+SHIFT+d" = "spawn,wayscriber --active"
+"SUPER+SHIFT+e" = "spawn_shell,$HOME/.config/hypr/scripts/Kool_Quick_Settings.sh"
+"SUPER+ALT+r" = "spawn_shell,$HOME/.config/hypr/scripts/Refresh.sh"
+"SUPER+ALT+e" = "spawn_shell,$HOME/.config/hypr/scripts/Emoji.sh"
+"SUPER+s" = "spawn_shell,$HOME/.config/hypr/scripts/WebSearch.sh"
+"SUPER+SHIFT+v" = "spawn_shell,$HOME/.config/hypr/scripts/ClipManager.sh"
+"SUPER+ALT+c" = "spawn_shell,$HOME/.config/hypr/UserScripts/Calculator.sh"
+"SUPER+SHIFT+m" = "spawn_shell,$HOME/.config/hypr/UserScripts/MusicMenu.sh"
+"SUPER+SHIFT+o" = "spawn_shell,$HOME/.config/hypr/UserScripts/ZshChangeTheme.sh"
+"SUPER+w" = "spawn_shell,$HOME/.config/hypr/UserScripts/WallpaperSelect.sh"
+"SUPER+SHIFT+w" = "spawn_shell,$HOME/.config/hypr/UserScripts/WallpaperEffects.sh"
+"SUPER+ALT+w" = "spawn_shell,$HOME/.config/hypr/scripts/SumiWidgets.sh"
+"CTRL+ALT+w" = "spawn_shell,$HOME/.config/hypr/UserScripts/WallpaperRandom.sh"
+
+# ---- overview (replaces the quickshell overview) ----
+"SUPER+a" = "toggleoverview"
+"ALT+Tab" = "switcher,next"
+"ALT+SHIFT+Tab" = "switcher,prev"
+
+# ---- layout ----
+"SUPER+ALT+l" = "switch_layout"
+"SUPER+i" = "incnmaster,+1"
+"SUPER+CTRL+d" = "incnmaster,-1"
+"SUPER+CTRL+Return" = "zoom"
+"SUPER+m" = "setmfact,-0.05"
+"SUPER+SHIFT+comma" = "setmfact,-0.05"
+"SUPER+SHIFT+period" = "setmfact,+0.05"
+"SUPER+p" = "dwindle_toggle_current_split"
+"SUPER+g" = "groupjoin,right"
+"SUPER+CTRL+g" = "groupleave"
+"SUPER+CTRL+Tab" = "groupfocus,next"
+
+# ---- tools ----
+"SUPER+SHIFT+g" = "spawn_shell,$HOME/.config/hypr/scripts/GameMode.sh"
+"SUPER+ALT+o" = "spawn_shell,$HOME/.config/hypr/scripts/ChangeBlur.sh"
+"SUPER+SHIFT+k" = "spawn_shell,$HOME/.config/hypr/scripts/KeyBinds.sh"
+"SUPER+SHIFT+r" = "spawn_shell,$HOME/.config/hypr/UserScripts/RefreshRate.sh toggle"
+
+# ---- window state ----
+"SUPER+SHIFT+f" = "togglefullscreen"
+"SUPER+CTRL+f" = "togglemaximizescreen"
+"SUPER+ALT+space" = "toggle_all_floating"
+"SUPER+o" = "togglefloating"
+
+# ---- focus / move ----
+# dwm: J/K cycle the stack, H/L shrink/grow the master area
+"SUPER+h" = "focusdir,left"
+"SUPER+l" = "focusdir,right"
+"SUPER+j" = "focusstack,next"
+"SUPER+k" = "focusstack,prev"
+"SUPER+Left" = "focusdir,left"
+"SUPER+Right" = "focusdir,right"
+"SUPER+Up" = "focusdir,up"
+"SUPER+Down" = "focusdir,down"
+"SUPER+SHIFT+h" = "move_client,left"
+"SUPER+SHIFT+l" = "move_client,right"
+"SUPER+SHIFT+j" = "move_client,down"
+"SUPER+ALT+h" = "exchange_client,left"
+"SUPER+ALT+k" = "exchange_client,up"
+"SUPER+ALT+j" = "exchange_client,down"
+"SUPER+SHIFT+Left" = "resizewin,-50,+0"
+"SUPER+SHIFT+Right" = "resizewin,+50,+0"
+"SUPER+SHIFT+Up" = "resizewin,+0,-50"
+"SUPER+SHIFT+Down" = "resizewin,+0,+50"
+
+# ---- tags (workspaces) ----
+"SUPER+1" = "view,1,0"
+"SUPER+2" = "view,2,0"
+"SUPER+3" = "view,3,0"
+"SUPER+4" = "view,4,0"
+"SUPER+5" = "view,5,0"
+"SUPER+6" = "view,6,0"
+"SUPER+7" = "view,7,0"
+"SUPER+8" = "view,8,0"
+"SUPER+9" = "view,9,0"
+"SUPER+SHIFT+1" = "tag,1,0"
+"SUPER+SHIFT+2" = "tag,2,0"
+"SUPER+SHIFT+3" = "tag,3,0"
+"SUPER+SHIFT+4" = "tag,4,0"
+"SUPER+SHIFT+5" = "tag,5,0"
+"SUPER+SHIFT+6" = "tag,6,0"
+"SUPER+SHIFT+7" = "tag,7,0"
+"SUPER+SHIFT+8" = "tag,8,0"
+"SUPER+SHIFT+9" = "tag,9,0"
+"SUPER+CTRL+1" = "tagsilent,1"
+"SUPER+CTRL+2" = "tagsilent,2"
+"SUPER+CTRL+3" = "tagsilent,3"
+"SUPER+CTRL+4" = "tagsilent,4"
+"SUPER+CTRL+5" = "tagsilent,5"
+"SUPER+CTRL+6" = "tagsilent,6"
+"SUPER+CTRL+7" = "tagsilent,7"
+"SUPER+CTRL+8" = "tagsilent,8"
+"SUPER+CTRL+9" = "tagsilent,9"
+"SUPER+Tab" = "viewtoright,0"
+"SUPER+SHIFT+Tab" = "viewtoleft,0"
+"SUPER+period" = "viewtoright_have_client,0"
+"SUPER+comma" = "viewtoleft_have_client,0"
+"SUPER+SHIFT+bracketleft" = "tagtoleft,0"
+"SUPER+SHIFT+bracketright" = "tagtoright,0"
+# special workspace -> mango special tag
+"SUPER+u" = "toggle_special_tag"
+"SUPER+SHIFT+u" = "tag_special_tag"
+
+# ---- monitors ----
+"SUPER+CTRL+F9" = "tagmon,left"
+"SUPER+CTRL+F10" = "tagmon,right"
+"SUPER+CTRL+F11" = "tagmon,up"
+"SUPER+CTRL+F12" = "tagmon,down"
+
+# ---- screenshots ----
+"SUPER+Print" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --now"
+"SUPER+SHIFT+Print" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --area"
+"SUPER+CTRL+Print" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --in5"
+"SUPER+CTRL+SHIFT+Print" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --in10"
+"ALT+Print" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --active"
+"SUPER+SHIFT+s" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --swappy"
+"SUPER+ALT+s" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --swappy --active"
+"SUPER+F6" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --now"
+"SUPER+SHIFT+F6" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --area"
+"SUPER+CTRL+F6" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --in5"
+"SUPER+ALT+F6" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --in10"
+"ALT+F6" = "spawn_shell,$HOME/.config/hypr/scripts/ScreenShot.sh --active"
+
+# ---- laptop (ASUS) ----
+"XF86KbdBrightnessDown" = "spawn_shell,$HOME/.config/hypr/scripts/BrightnessKbd.sh --dec"
+"XF86KbdBrightnessUp" = "spawn_shell,$HOME/.config/hypr/scripts/BrightnessKbd.sh --inc"
+"XF86MonBrightnessDown" = "spawn_shell,$HOME/.config/hypr/scripts/Brightness.sh --dec"
+"XF86MonBrightnessUp" = "spawn_shell,$HOME/.config/hypr/scripts/Brightness.sh --inc"
+"XF86Launch1" = "spawn,rog-control-center"
+"XF86Launch3" = "spawn,asusctl led-mode -n"
+"XF86Launch4" = "spawn,asusctl profile -n"
+"XF86TouchpadToggle" = "spawn_shell,$HOME/.config/hypr/scripts/TouchPad.sh"
+
+# work on the lock screen too
+[bind.default.lock]
+"CTRL+ALT+l" = "spawn_shell,$HOME/.config/hypr/scripts/LockScreen.sh"
+"XF86AudioRaiseVolume" = "spawn_shell,$HOME/.config/hypr/scripts/Volume.sh --inc"
+"XF86AudioLowerVolume" = "spawn_shell,$HOME/.config/hypr/scripts/Volume.sh --dec"
+"XF86AudioMicMute" = "spawn_shell,$HOME/.config/hypr/scripts/Volume.sh --toggle-mic"
+"XF86AudioMute" = "spawn_shell,$HOME/.config/hypr/scripts/Volume.sh --toggle"
+"XF86Sleep" = "spawn,systemctl suspend"
+"XF86Rfkill" = "spawn_shell,$HOME/.config/hypr/scripts/AirplaneMode.sh"
+"XF86AudioPlay" = "spawn_shell,$HOME/.config/hypr/scripts/MediaCtrl.sh --pause"
+"XF86AudioNext" = "spawn_shell,$HOME/.config/hypr/scripts/MediaCtrl.sh --nxt"
+"XF86AudioPrev" = "spawn_shell,$HOME/.config/hypr/scripts/MediaCtrl.sh --prv"
+"XF86AudioStop" = "spawn_shell,$HOME/.config/hypr/scripts/MediaCtrl.sh --stop"
+
+[mousebind.default]
+"SUPER+btn_left" = "moveresize,curmove"
+"SUPER+btn_right" = "moveresize,curresize"
+
+[axisbind.default]
+"SUPER+UP" = "viewtoleft_have_client,0"
+"SUPER+DOWN" = "viewtoright_have_client,0"
+
+[gesturebind.default]
+# 3-finger horizontal = switch workspace (inverted like before)
+"none+left+3" = "viewtoright_have_client,0"
+"none+right+3" = "viewtoleft_have_client,0"
+"none+up+3" = "enteroverview"
+"none+down+3" = "leaveoverview"

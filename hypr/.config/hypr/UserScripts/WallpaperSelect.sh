@@ -20,7 +20,7 @@ BEZIER=".43,1.19,1,.4"
 SWWW_PARAMS="--transition-fps $FPS --transition-type $TYPE --transition-duration $DURATION --transition-bezier $BEZIER"
 
 # Variables
-focused_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
+focused_monitor=$($HOME/.config/hypr/scripts/wm.sh monitor | jq -r .name)
 
 # Ensure focused_monitor is detected
 if [[ -z "$focused_monitor" ]]; then

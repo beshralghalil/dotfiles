@@ -7,7 +7,7 @@ terminal=kitty
 wallpaper_current="$HOME/.config/hypr/wallpaper_effects/.wallpaper_current"
 wallpaper_output="$HOME/.config/hypr/wallpaper_effects/.wallpaper_modified"
 SCRIPTSDIR="$HOME/.config/hypr/scripts"
-focused_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
+focused_monitor=$($HOME/.config/hypr/scripts/wm.sh monitor | jq -r .name)
 
 # Notification icons
 iDIR="$HOME/.config/swaync/images"

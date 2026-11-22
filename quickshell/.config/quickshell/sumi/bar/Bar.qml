@@ -72,71 +72,19 @@ Scope {
         return ps.length ? ps[0] : null;
     }
 
-    function workspacesFor(mon) {
-        const byId = {};
-        let max = root.persistentWorkspaces;
-        const all = Hyprland.workspaces.values;
-        for (let i = 0; i < all.length; i++) {
-            const w = all[i];
-            if (w.id <= 0) continue;            // special / scratchpad
-            byId[w.id] = w;
-            if (w.id > max) max = w.id;
-        }
-        const activeId = mon && mon.activeWorkspace ? mon.activeWorkspace.id
-                       : Hyprland.focusedWorkspace ? Hyprland.focusedWorkspace.id : -1;
-        const out = [];
-        for (let id = 1; id <= max; id++) {
-            const w = byId[id];
-            if (!w && id > root.persistentWorkspaces) continue;
-            out.push({
-                id: id,
-                name: w ? w.name : "" + id,
-                active: id === activeId,
-                occupied: w ? w.toplevels.values.length > 0 : false,
-                urgent: w ? w.urgent : false
-            });
-        }
-        return out;
-    }
-
-    function titleFor(mon) {
-        const t = Hyprland.activeToplevel;
-        if (!t) return "";
-        if (mon && t.monitor && t.monitor !== mon) return "";
-        // focus can land on an empty workspace without a fresh active-window
-        // event; don't keep showing a window from another workspace
-        const ws = mon ? mon.activeWorkspace : Hyprland.focusedWorkspace;
-        if (ws && t.workspace && t.workspace.id !== ws.id) return "";
-        return t.title || "";
-    }
+    function workspacesFor(name) { return Compositor.workspacesFor(name, root.persistentWorkspaces) }
+    function titleFor(name) { return Compositor.titleFor(name) }
 
     function run(cmd) { Quickshell.execDetached(["sh", "-c", cmd]) }
 
     // ── keyboard layout ─────────────────────────────────────────────────────
     // "English (US)" -> "US", "Arabic" -> "AR"
-    property string kbLayout: ""
     function shortLayout(name) {
         if (!name) return "";
         const m = name.match(/\(([^)]+)\)/);
         return (m ? m[1] : name.slice(0, 2)).toUpperCase();
     }
-    Connections {
-        target: Hyprland
-        // activelayout>>keyboardname,layout name
-        function onRawEvent(event) {
-            if (event.name !== "activelayout") return;
-            const d = event.data, i = d.lastIndexOf(",");
-            root.kbLayout = root.shortLayout(i >= 0 ? d.slice(i + 1) : d);
-        }
-    }
-    Process {
-        running: true
-        command: ["sh", "-c", "hyprctl devices -j | jq -r '.keyboards[] | select(.main) | .active_keymap' | head -n1"]
-        stdout: StdioCollector { onStreamFinished: root.kbLayout = root.shortLayout(this.text.trim()) }
-    }
-
-    // `lua` for the Lua config, `legacy` for a classic hyprland.conf
-    function dispatch(lua, legacy) { Hyprland.dispatch(Hyprland.usingLua ? lua : legacy) }
+    readonly property string kbLayout: shortLayout(Compositor.kbLayout)
 
     function nudge(node, dir) {
         if (!node || !node.audio) return;
@@ -153,17 +101,8 @@ Scope {
         case "kbLayout": run(root.scripts + "/SwitchKeyboardLayout.sh"); break;
         case "launcher": run(root.launcherCommand); break;
         case "launcherAlt": run(root.launcherAltCommand); break;
-        case "workspace": {
-            const w = Hyprland.workspaces.values.find(x => x.id === arg);
-            if (w) w.activate();
-            else dispatch("hl.dsp.focus({ workspace = " + arg + " })", "workspace " + arg);
-            break;
-        }
-        case "workspaceStep": {
-            const s = arg > 0 ? "e+1" : "e-1";
-            dispatch('hl.dsp.focus({ workspace = "' + s + '" })', "workspace " + s);
-            break;
-        }
+        case "workspace": Compositor.activateWorkspace(arg); break;
+        case "workspaceStep": Compositor.workspaceStep(arg); break;
         case "notif": run(root.notificationsCommand); break;
         case "notifDnd": Notifs.toggleDnd(); break;
         case "brightnessStep":
@@ -197,7 +136,7 @@ Scope {
             id: win
             required property var modelData
             screen: modelData
-            readonly property var monitor: Hyprland.monitorFor(modelData)
+            readonly property string monitor: modelData.name
 
             visible: root.shown
             color: "transparent"

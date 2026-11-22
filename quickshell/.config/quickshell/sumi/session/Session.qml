@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import "../common"
+import "../services"
 
 // Session / power menu (replaces wlogout). Opened with
 //   qs -p ~/.config/quickshell/sumi ipc call session toggle
@@ -17,7 +18,7 @@ Scope {
         root.home + "/.config/hypr/scripts/LockScreen.sh",
         "systemctl reboot",
         "systemctl poweroff",
-        "hyprctl dispatch 'hl.dsp.exit()'",
+        Compositor.exitCommand,
         "systemctl suspend",
         "systemctl hibernate"
     ]
@@ -35,7 +36,7 @@ Scope {
     PanelWindow {
         id: win
         visible: root.open
-        screen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name) ?? Quickshell.screens[0]
+        screen: Compositor.focusedScreen
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.namespace: "sumi-session"
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive

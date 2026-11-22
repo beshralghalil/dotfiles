@@ -9,7 +9,7 @@
 
 wallust_refresh=$HOME/.config/hypr/scripts/RefreshWallust.sh
 
-focused_monitor=$(hyprctl monitors | awk '/^Monitor/{name=$2} /focused: yes/{print name}')
+focused_monitor=$($HOME/.config/hypr/scripts/wm.sh monitor | jq -r .name)
 
 if [[ $# -lt 1 ]] || [[ ! -d $1   ]]; then
 	echo "Usage:

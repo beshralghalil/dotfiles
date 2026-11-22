@@ -4,6 +4,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import "../common"
+import "../services"
 import "match.js" as Match
 
 // 墨 picker: the dmenu-style menu behind ~/.local/bin/sumi-menu (rofi -dmenu flags).
@@ -88,7 +89,7 @@ Scope {
 
     function openWindows() {
         root.finishCurrent(1, "none", []);
-        Hyprland.refreshToplevels();
+        Compositor.refreshWindows();
         root.mode = "windows";
         root.requestPath = "";
         root.resultPath = "";
@@ -186,30 +187,25 @@ Scope {
     }
 
     function windowRows() {
-        const src = Hyprland.toplevels.values;
+        const src = Compositor.windows();
         const rows = [];
         for (let i = 0; i < src.length; i++) {
-            const t = src[i];
-            if (!t) continue;
-            const ipc = t.lastIpcObject || {};
-            const appId = (t.wayland && t.wayland.appId) || ipc["class"] || "";
-            const ws = t.workspace ? t.workspace : null;
+            const w = src[i];
+            const appId = w.appId;
             let icon = "";
             const de = appId.length ? DesktopEntries.heuristicLookup(appId) : null;
             if (de && de.icon) icon = Quickshell.iconPath(de.icon, true);
             if (!icon.length && appId.length) icon = Quickshell.iconPath(appId.toLowerCase(), true);
-            let addr = String(t.address || "");
-            if (addr.indexOf("0x") !== 0) addr = "0x" + addr;
             rows.push({
-                text: t.title || appId || addr,
-                sub: (appId || "window") + (ws ? "   ·   workspace " + ws.name : "") + (t.activated ? "   ·   focused" : ""),
-                meta: appId + " " + (ws ? ws.name : ""),
+                text: w.title || appId || w.key,
+                sub: (appId || "window") + (w.wsName ? "   ·   workspace " + w.wsName : "") + (w.focused ? "   ·   focused" : ""),
+                meta: appId + " " + w.wsName,
                 icon: icon,
                 iconKind: icon.length ? 1 : 0,
                 selectable: true,
-                active: t.activated,
-                address: addr,
-                wsId: ws ? ws.id : 9999
+                active: w.focused,
+                address: w.key,
+                wsId: w.wsId
             });
         }
         rows.sort((a, b) => a.wsId - b.wsId);
@@ -291,15 +287,7 @@ Scope {
 
     function close() { root.open = false; }
 
-    function focusedScreen() {
-        const mon = Hyprland.focusedMonitor;
-        const screens = Quickshell.screens;
-        if (mon)
-            for (let i = 0; i < screens.length; i++)
-                if (screens[i].name === mon.name)
-                    return screens[i];
-        return screens.length ? screens[0] : null;
-    }
+    function focusedScreen() { return Compositor.focusedScreen; }
 
     // write the result for the current request (if any) and close
     function finishCurrent(code, kind, payload) {
@@ -331,9 +319,7 @@ Scope {
             const e = root.entries[root.shown[pos]];
             root.close();
             if (e && e.address)
-                Hyprland.dispatch(Hyprland.usingLua
-                    ? 'hl.dsp.focus({ window = "address:' + e.address + '" })'
-                    : "focuswindow address:" + e.address);
+                Compositor.focusWindow(e.address);
             return;
         }
         const cur = root.entries[root.shown[pos]];

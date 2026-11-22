@@ -14,9 +14,9 @@ wallpaper_current="$HOME/.config/hypr/wallpaper_effects/.wallpaper_current"
 # Helper: get focused monitor name (prefer JSON)
 get_focused_monitor() {
   if command -v jq >/dev/null 2>&1; then
-    hyprctl monitors -j | jq -r '.[] | select(.focused) | .name'
+    $HOME/.config/hypr/scripts/wm.sh monitor | jq -r .name
   else
-    hyprctl monitors | awk '/^Monitor/{name=$2} /focused: yes/{print name}'
+    mmsg get all-monitors | grep -o '"name":"[^"]*"' | head -1 | cut -d'"' -f4
   fi
 }
 

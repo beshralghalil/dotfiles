@@ -11,7 +11,7 @@ iDIR="$HOME/.config/swaync/icons"
 iDoR="$HOME/.config/swaync/images"
 sDIR="$HOME/.config/hypr/scripts"
 
-active_window_class=$(hyprctl -j activewindow | jq -r '(.class)')
+active_window_class=$($HOME/.config/hypr/scripts/wm.sh active | jq -r .class)
 active_window_file="Screenshot_${time}_${active_window_class}.png"
 active_window_path="${dir}/${active_window_file}"
 
@@ -100,9 +100,8 @@ shot10() {
 }
 
 shotwin() {
-	w_pos=$(hyprctl activewindow | grep 'at:' | cut -d':' -f2 | tr -d ' ' | tail -n1)
-	w_size=$(hyprctl activewindow | grep 'size:' | cut -d':' -f2 | tr -d ' ' | tail -n1 | sed s/,/x/g)
-	cd ${dir} && grim -g "$w_pos $w_size" - | tee "$file" | wl-copy
+	w_geo=$($HOME/.config/hypr/scripts/wm.sh active | jq -r '"\(.x),\(.y) \(.w)x\(.h)"')
+	cd ${dir} && grim -g "$w_geo" - | tee "$file" | wl-copy
 	notify_view
 }
 
@@ -119,11 +118,11 @@ shotarea() {
 }
 
 shotactive() {
-    active_window_class=$(hyprctl -j activewindow | jq -r '(.class)')
+    active_window_class=$($HOME/.config/hypr/scripts/wm.sh active | jq -r .class)
     active_window_file="Screenshot_${time}_${active_window_class}.png"
     active_window_path="${dir}/${active_window_file}"
 
-    hyprctl -j activewindow | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"' | grim -g - "${active_window_path}"
+    $HOME/.config/hypr/scripts/wm.sh active | jq -r '"\(.x),\(.y) \(.w)x\(.h)"' | grim -g - "${active_window_path}"
 	sleep 1
     notify_view "active"
 }

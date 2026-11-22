@@ -61,3 +61,6 @@ quickshell.target = '~/.config/quickshell/qml_color.json'
 
 #zathura.template = 'colors-zathura'
 #zathura.target = '~/.config/zathura/zathurarc'
+
+mango.template = 'colors-mango.toml'
+mango.target = '~/.config/mango/wallust.toml'

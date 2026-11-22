@@ -5,7 +5,7 @@
 
 
 # Get id of an active window
-active_pid=$(hyprctl activewindow | grep -o 'pid: [0-9]*' | cut -d' ' -f2)
+active_pid=$($HOME/.config/hypr/scripts/wm.sh active | jq -r .pid)
 
 # Close active window
 kill $active_pid

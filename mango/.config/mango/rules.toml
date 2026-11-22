@@ -1,0 +1,154 @@
+# Monitor, tag, window and layer rules — from hypr monitors.lua, configs/WindowRules.lua
+
+# ---- monitors (was monitors.lua) ----
+[[rule.monitor_rule]]
+name = "^eDP-1$"
+width = 1920
+height = 1080
+refresh = 144
+x = 0
+y = 0
+scale = 1.33
+vrr = 1
+
+[[rule.monitor_rule]]
+name = "^HDMI-A-3$"
+disable = 1
+
+# ---- tags: default layout dwindle (like Hyprland) ----
+[[rule.tag_rule]]
+id = 1
+layout_name = "dwindle"
+[[rule.tag_rule]]
+id = 2
+layout_name = "dwindle"
+[[rule.tag_rule]]
+id = 3
+layout_name = "dwindle"
+[[rule.tag_rule]]
+id = 4
+layout_name = "dwindle"
+[[rule.tag_rule]]
+id = 5
+layout_name = "dwindle"
+[[rule.tag_rule]]
+id = 6
+layout_name = "dwindle"
+[[rule.tag_rule]]
+id = 7
+layout_name = "dwindle"
+[[rule.tag_rule]]
+id = 8
+layout_name = "dwindle"
+[[rule.tag_rule]]
+id = 9
+layout_name = "dwindle"
+
+# ---- drop-down terminal (was Dropterminal.sh) ----
+[[rule.window_rule]]
+app_id = "^kitty-dropterm$"
+is_named_scratchpad = 1
+width = 0.7
+height = 0.5
+offset_y = -60
+
+# ---- floating windows ----
+[[rule.window_rule]]
+app_id = "([Zz]oom|onedriver|onedriver-launcher)"
+is_floating = 1
+
+[[rule.window_rule]]
+app_id = "^(mpv|com.github.rafostar.Clapper)$"
+is_floating = 1
+
+[[rule.window_rule]]
+app_id = "^([Qq]alculate-gtk)$"
+is_floating = 1
+
+[[rule.window_rule]]
+title = "^(Authentication Required|Authentication required)$"
+is_floating = 1
+
+[[rule.window_rule]]
+title = "^(Save As|Open Files|Add Folder to Workspace)$"
+is_floating = 1
+width = 0.7
+height = 0.6
+
+[[rule.window_rule]]
+app_id = "^(pavucontrol|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol|nm-connection-editor|blueman-manager)$"
+is_floating = 1
+
+# ---- app popups: float the app, then re-tile its main window (later rule wins) ----
+[[rule.window_rule]]
+app_id = "^([Ss]team)$"
+is_floating = 1
+[[rule.window_rule]]
+app_id = "^([Ss]team)$"
+title = "^([Ss]team)$"
+is_floating = 0
+
+[[rule.window_rule]]
+app_id = "^(com.heroicgameslauncher.hgl)$"
+is_floating = 1
+[[rule.window_rule]]
+app_id = "^(com.heroicgameslauncher.hgl)$"
+title = "^(Heroic Games Launcher)$"
+is_floating = 0
+
+[[rule.window_rule]]
+app_id = "^(codium|codium-url-handler|VSCodium)$"
+is_floating = 1
+[[rule.window_rule]]
+app_id = "^(codium|codium-url-handler|VSCodium)$"
+title = "(.*codium.*|.*VSCodium.*)"
+is_floating = 0
+
+# ---- polkit / centered tools (mango centers floating windows) ----
+[[rule.window_rule]]
+app_id = "^(xfce-polkit|mate-polkit|polkit-mate-authentication-agent-1|org.kde.polkit-kde-authentication-agent-1)$"
+is_floating = 1
+width = 0.35
+height = 0.35
+
+[[rule.window_rule]]
+title = "^(ROG Control|Keybindings|Wi-Fi Network Authentication Required)$"
+is_floating = 1
+
+[[rule.window_rule]]
+app_id = "^([Ww]hatsapp-for-linux|ZapZap|com.rtosta.zapzap)$"
+is_floating = 1
+
+# ---- games: allow tearing ----
+[[rule.window_rule]]
+app_id = "^(gamescope|steam_app_[0-9]+)$"
+force_tearing = 1
+
+# ---- chat apps open silently on tag 9 ----
+[[rule.window_rule]]
+app_id = "^([Dd]iscord|[Ww]ebCord|[Vv]esktop|[Ff]erdium|org.telegram.desktop|io.github.tdesktop_x64.TDesktop|teams-for-linux|im.riot.Riot|Element)$"
+tags = 9
+is_open_silent = 1
+
+# ---- opacity ----
+[[rule.window_rule]]
+app_id = "^(firefox|org.mozilla.firefox|zen|zen-alpha|chromium|brave-browser)$"
+focused_opacity = 0.8
+unfocused_opacity = 0.8
+
+[[rule.window_rule]]
+app_id = "^(codium|VSCodium|code|dev.zed.Zed|jetbrains-.+)$"
+focused_opacity = 0.8
+unfocused_opacity = 0.8
+
+[[rule.window_rule]]
+app_id = "^([Mm]pv|vlc|[Aa]udacious)$"
+no_blur = 1
+focused_opacity = 1.0
+unfocused_opacity = 1.0
+
+# ---- layers ----
+[[rule.layer_rule]]
+layer_name = "selection"
+no_animation = 1
+no_blur = 1

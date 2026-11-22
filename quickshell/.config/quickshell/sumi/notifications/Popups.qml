@@ -15,7 +15,7 @@ PanelWindow {
     property bool suppressed: false   // the center is open
     readonly property var popups: Notifs.popups
 
-    screen: Quickshell.screens.find(s => s.name === Hyprland.focusedMonitor?.name) ?? Quickshell.screens[0]
+    screen: Compositor.focusedScreen
     visible: cards.count > 0 && !win.suppressed
     color: "transparent"
     exclusionMode: ExclusionMode.Normal

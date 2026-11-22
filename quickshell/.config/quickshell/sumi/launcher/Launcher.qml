@@ -4,6 +4,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import "../common"
+import "../services"
 import "fuzzy.js" as Fuzzy
 import "calc.js" as Calc
 
@@ -37,15 +38,7 @@ Scope {
     function hide() { root.open = false; }
     function toggle() { if (root.open) root.hide(); else root.show(); }
 
-    function focusedScreen() {
-        const mon = Hyprland.focusedMonitor;
-        const screens = Quickshell.screens;
-        if (mon)
-            for (let i = 0; i < screens.length; i++)
-                if (screens[i].name === mon.name)
-                    return screens[i];
-        return screens.length ? screens[0] : null;
-    }
+    function focusedScreen() { return Compositor.focusedScreen; }
 
     // ── data ───────────────────────────────────────────────────────────────
     property int appsRevision: 0
