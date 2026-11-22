@@ -156,7 +156,7 @@ Item {
         var lines = output.trim().split("\n");
         var currentDesktop = shim.greeter ? "" : (Quickshell.env("XDG_SESSION_DESKTOP") || Quickshell.env("DESKTOP_SESSION") || "").toLowerCase();
         // greeter: start on this session file
-        var defaultSession = Quickshell.env("SUMI_DEFAULT_SESSION") || "hyprland.desktop";
+        var defaultSession = Quickshell.env("SUMI_DEFAULT_SESSION") || "mango.desktop";
         var bestIndex = 0;
         var added = 0;
 

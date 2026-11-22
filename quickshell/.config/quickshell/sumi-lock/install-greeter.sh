@@ -3,7 +3,7 @@
 # shown by cage, so login and lock look the same. Works on a fresh system; needs sudo.
 #   install-greeter.sh           install/update /usr/share/sumi-greeter, configure greetd and enable it
 #   install-greeter.sh --remove  remove it and restore the previous /etc/greetd/config.toml
-# Keyboard layouts are taken from the running Hyprland, else KB_LAYOUT / KB_OPTIONS, else "us".
+# Keyboard layouts are taken from ~/.config/mango/config.toml, else KB_LAYOUT / KB_OPTIONS, else "us".
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -29,12 +29,13 @@ if [ ${#need[@]} -gt 0 ]; then
     sudo pacman -S --needed "${need[@]}"
 fi
 
-# keyboard layouts for cage: same as Hyprland's
-layout="${KB_LAYOUT:-us}" options="${KB_OPTIONS:-}"
-if command -v hyprctl >/dev/null && hyprctl version >/dev/null 2>&1; then
-    layout=$(hyprctl getoption input:kb_layout -j | jq -r '.str // empty'); layout=${layout:-us}
-    options=$(hyprctl getoption input:kb_options -j | jq -r '.str // empty')
-fi
+# keyboard layouts for cage: same as mango's (xkb_rules_layout / xkb_rules_options)
+layout="${KB_LAYOUT:-}" options="${KB_OPTIONS:-}"
+MANGO_CONF="$HOME/.config/mango/config.toml"
+mango_opt() { sed -n -E "s/^[[:space:]]*$1[[:space:]]*=[[:space:]]*\"([^\"]*)\".*/\1/p" "$MANGO_CONF" 2>/dev/null | head -n1; }
+[ -n "$layout" ] || layout=$(mango_opt xkb_rules_layout)
+[ -n "$options" ] || options=$(mango_opt xkb_rules_options)
+layout=${layout:-us}
 
 # greeter files; a cache dir the greeter user can write (Mesa/cage shader cache)
 sudo install -d -o greeter -g greeter -m 700 /var/cache/sumi-greeter

@@ -17,7 +17,7 @@ ShellRoot {
     readonly property var userModel: sddmShim.userModel
     readonly property var sessionModel: sddmShim.sessionModel
     // SDDM exposes a `keyboard` object to themes (orbital reads it); here backed by Hyprland's active layout
-    readonly property var keyboard: HyprKeyboard {}
+    readonly property var keyboard: MangoKeyboard {}
     readonly property var battery: Battery {}
     readonly property bool isWayland: Quickshell.env("XDG_SESSION_TYPE") === "wayland"
     property bool authenticated: false
@@ -34,7 +34,7 @@ ShellRoot {
         function onLoginSucceeded() {
             shellRoot.authenticated = true
 
-            // (misc.allow_session_lock_restore is set in the Hyprland Lua config; `hyprctl keyword` does not work with Lua)
+            // unlock the logind session so idle/lock state is cleared
             Quickshell.execDetached(["loginctl", "unlock-session"]);
 
             // Dynamic exit delay
