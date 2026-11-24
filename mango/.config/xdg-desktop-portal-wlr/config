@@ -1,0 +1,7 @@
+# xdg-desktop-portal-wlr (screen sharing on mango) — man 5 xdg-desktop-portal-wlr
+[screencast]
+# pick a monitor or a single window in the sumi picker
+chooser_type = dmenu
+chooser_cmd = sh -c '"$HOME/.local/bin/sumi-menu" -dmenu -i -p Share -placeholder "share a screen or window"'
+# hybrid Intel + NVIDIA: linear buffers avoid black frames in OBS/Firefox
+force_mod_linear = 1
