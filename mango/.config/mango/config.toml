@@ -23,7 +23,7 @@ exec_once = [
 
 # ---- Layouts (dwm-style dynamic tiling) ----
 # switch_layout cycles only these (was ChangeLayout.sh: master <-> dwindle)
-circle_layout = "dwindle,scroller,fair"
+circle_layout = "dwindle,scroller"
 new_is_master = 1
 default_master_factor = 0.5
 default_master_count = 1
@@ -34,7 +34,7 @@ dwindle_smart_split = 0
 # new windows always go left / above, never by cursor position
 dwindle_horizontal_split = 1
 dwindle_vertical_split = 1
-monocle_tab_mode = 1
+monocle_tab_mode = 0
 scroller_proportion_preset = [0.5, 0.8, 1.0]
 
 # ---- Looks (was UserDecorations.lua) ----
