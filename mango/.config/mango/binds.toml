@@ -38,6 +38,8 @@
 "ALT+SHIFT+Tab" = "switcher,prev"
 
 # ---- layout ----
+"SUPER+r" = "switch_proportion_preset"
+"SUPER+ALT+f" = "set_proportion,1.0"
 "SUPER+ALT+l" = "switch_layout"
 "SUPER+i" = "incnmaster,+1"
 "SUPER+CTRL+d" = "incnmaster,-1"
