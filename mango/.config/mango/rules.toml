@@ -54,6 +54,12 @@ offset_y = -60
 
 # ---- floating windows ----
 [[rule.window_rule]]
+app_id = "^(xdg-desktop-portal-gtk)$"
+is_floating = 1
+width = 0.7
+height = 0.6
+
+[[rule.window_rule]]
 app_id = "([Zz]oom|onedriver|onedriver-launcher)"
 is_floating = 1
 
@@ -69,11 +75,6 @@ is_floating = 1
 title = "^(Authentication Required|Authentication required)$"
 is_floating = 1
 
-[[rule.window_rule]]
-title = "^(Save As|Open Files|Add Folder to Workspace)$"
-is_floating = 1
-width = 0.7
-height = 0.6
 
 [[rule.window_rule]]
 app_id = "^(pavucontrol|org.pulseaudio.pavucontrol|com.saivert.pwvucontrol|nm-connection-editor|blueman-manager)$"
@@ -96,13 +97,6 @@ app_id = "^(com.heroicgameslauncher.hgl)$"
 title = "^(Heroic Games Launcher)$"
 is_floating = 0
 
-[[rule.window_rule]]
-app_id = "^(codium|codium-url-handler|VSCodium)$"
-is_floating = 1
-[[rule.window_rule]]
-app_id = "^(codium|codium-url-handler|VSCodium)$"
-title = "(.*codium.*|.*VSCodium.*)"
-is_floating = 0
 
 # ---- polkit / centered tools (mango centers floating windows) ----
 [[rule.window_rule]]
