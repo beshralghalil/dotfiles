@@ -35,7 +35,8 @@ dwindle_smart_split = 0
 dwindle_horizontal_split = 1
 dwindle_vertical_split = 1
 monocle_tab_mode = 0
-scroller_default_proportion = 0.95
+scroller_default_proportion = 1
+scroller_structs = 8
 scroller_proportion_preset = [0.5, 0.8, 0.95, 1.0]
 
 # ---- Looks (was UserDecorations.lua) ----
